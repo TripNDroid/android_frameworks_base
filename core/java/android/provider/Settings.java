@@ -1163,6 +1163,32 @@ public final class Settings {
         }
 
         /**
+         * @hide
+         * Convenience function for retrieving a single system settings value
+         * as a boolean.  Note that internally setting values are always
+         * stored as strings; this function converts the string to a boolean
+         * for you. It will only return true if the stored value is "1"
+         *
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @param def Value to return if the setting is not defined.
+         *
+         * @return The setting's current value, or 'def' if it is not defined
+         * or not a valid integer.
+         */
+        public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
+            String v = getString(cr, name);
+            try {
+                if(v != null)
+                    return "1".equals(v);
+                else
+                    return def;
+            } catch (NumberFormatException e) {
+                return def;
+            }
+        }
+
+        /**
          * Convenience function for updating a single settings value as an
          * integer. This will either create a new entry in the table if the
          * given name does not exist, or modify the value of the existing row
@@ -1183,6 +1209,24 @@ public final class Settings {
         public static boolean putIntForUser(ContentResolver cr, String name, int value,
                 int userHandle) {
             return putStringForUser(cr, name, Integer.toString(value), userHandle);
+        }
+
+        /**
+         * @hide
+         * Convenience function for updating a single settings value as a
+         * boolean. This will either create a new entry in the table if the
+         * given name does not exist, or modify the value of the existing row
+         * with that name.  Note that internally setting values are always
+         * stored as strings, so this function converts the given value to a
+         * string (1 or 0) before storing it.
+         *
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to modify.
+         * @param value The new value for the setting.
+         * @return true if the value was set, false on database errors
+         */
+        public static boolean putBoolean(ContentResolver cr, String name, boolean value) {
+            return putString(cr, name, value ? "1" : "0");
         }
 
         /**
@@ -2894,6 +2938,12 @@ public final class Settings {
         public static final String EXPANDED_DESKTOP_STYLE = "expanded_desktop_style";
 
         /**
+         * custom lockscreen text color
+         * @hide
+         */
+        public static final String LOCKSCREEN_CUSTOM_TEXT_COLOR = "lockscreen_custom_text_color";
+
+        /**
          * Whether to use a separate delay for "slide to unlock" and security
          * lock
          * @hide
@@ -3287,6 +3337,72 @@ public final class Settings {
         public static final String VOLUME_KEYS_CONTROL_RING_STREAM = "volume_keys_control_ring_stream";
 
         /**
+         * AM/PM Style for clock options
+         * 0 - Normal AM/PM
+         * 1 - Small AM/PM
+         * 2 - No AM/PM
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_AM_PM_STYLE = "statusbar_clock_am_pm_style";
+
+        /**
+         * Style of clock
+         * 0 - Hide Clock
+         * 1 - Right Clock
+         * 2 - Center Clock
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_STYLE = "statusbar_clock_style";
+
+        /**
+         * Setting for clock color
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_COLOR = "statusbar_clock_color";
+
+        /**
+         * Shows weekday before clock time
+         * 0 - No Day
+         * 1 - Small Day
+         * 2 - Normal Day
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_WEEKDAY = "statusbar_clock_weekday";
+
+        /**
+         * Show the pending notification counts as overlays on the statusbar
+         * @hide
+         */
+        public static final String STATUSBAR_NOTIF_COUNT = "status_bar_notif_count";
+
+        /**
+         * use Alt Activity Resolver Grid (GB style)
+         * boolean
+         *
+         * @hide
+         */
+        public static final String ACTIVITY_RESOLVER_USE_ALT = "activity_resolver_use_alt";
+
+        /**
+         * Holds the text for the Carrier label. An empty string
+         * will bring the default text back.
+         * @hide
+         */
+        public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
+
+        /**
+         * Sets the alpha of notification wallpaper
+         * @hide
+         */
+        public static final String NOTIF_WALLPAPER_ALPHA = "notif_wallpaper_alpha";
+
+        /**
+         * Vibrate when expanding notifications
+         * @hide
+         */
+        public static final String VIBRATE_NOTIF_EXPAND = "vibrate_notif_expand";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -3486,6 +3602,13 @@ public final class Settings {
          */
         @Deprecated
         public static final String USE_GOOGLE_MAIL = Global.USE_GOOGLE_MAIL;
+
+        /**
+         * whether to hide the Ram Usage Bar on recent switcher
+         *
+         * @hide
+         */
+        public static final String RAM_USAGE_BAR = "ram_usage_bar";
 
        /**
          * @deprecated Use

@@ -69,6 +69,7 @@ public class CircleBattery extends ImageView implements BatteryController.Batter
     private Paint   mPaintGray;
     private Paint   mPaintSystem;
     private Paint   mPaintRed;
+    private Paint   mPaintGreen;
 
     // runnable to invalidate view via mHandler.postDelayed() call
     private final Runnable mInvalidate = new Runnable() {
@@ -133,10 +134,12 @@ public class CircleBattery extends ImageView implements BatteryController.Batter
         mPaintGray = new Paint(mPaintFont);
         mPaintSystem = new Paint(mPaintFont);
         mPaintRed = new Paint(mPaintFont);
+	mPaintGreen = new Paint(mPaintFont);
 
         mPaintGray.setStrokeCap(Paint.Cap.BUTT);
         mPaintSystem.setStrokeCap(Paint.Cap.BUTT);
         mPaintRed.setStrokeCap(Paint.Cap.BUTT);
+	mPaintGreen.setStrokeCap(Paint.Cap.BUTT);
 
         mPaintFont.setColor(res.getColor(R.color.holo_blue_dark));
         mPaintSystem.setColor(res.getColor(R.color.holo_blue_dark));
@@ -144,6 +147,7 @@ public class CircleBattery extends ImageView implements BatteryController.Batter
         // do not want to use static 0x404040 color value. would break theming.
         mPaintGray.setColor(res.getColor(R.color.darker_gray));
         mPaintRed.setColor(res.getColor(R.color.holo_red_light));
+	mPaintGreen.setColor(Color.GREEN);
 
         // font needs some extra settings
         mPaintFont.setTextAlign(Align.CENTER);
@@ -232,13 +236,14 @@ public class CircleBattery extends ImageView implements BatteryController.Batter
         } else if (level < mWarningLevel) {
             usePaint = mPaintRed;
         } else if (getBatteryStatus() == BatteryManager.BATTERY_STATUS_FULL) {
+            usePaint = mPaintGreen;
             level = 100;
         }
 
         // draw thin gray ring first
         canvas.drawArc(drawRect, 270, 360, false, mPaintGray);
-        // draw colored arc representing charge level
         canvas.drawArc(drawRect, 270 + animOffset, 3.6f * level, false, usePaint);
+
         // if chosen by options, draw percentage text in the middle
         // always skip percentage when 100, so layout doesnt break
         if (unknownStatus) {
@@ -308,6 +313,7 @@ public class CircleBattery extends ImageView implements BatteryController.Batter
         mPaintRed.setStrokeWidth(strokeWidth);
         mPaintSystem.setStrokeWidth(strokeWidth);
         mPaintGray.setStrokeWidth(strokeWidth / 3.5f);
+        mPaintGreen.setStrokeWidth(strokeWidth);
 
         // calculate rectangle for drawArc calls
         int pLeft = getPaddingLeft();

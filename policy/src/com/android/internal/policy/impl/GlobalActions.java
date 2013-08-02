@@ -72,6 +72,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.internal.app.ThemeUtils;
 
@@ -172,7 +173,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             if (mUiContext != null) {
                 mUiContext = null;
             }
-            mDialog.dismiss();
+            mDialog.dismiss(); 
             mDialog = null;
             mDialog = createDialog();
             // Show delayed, so that the dismiss of the previous dialog completes

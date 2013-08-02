@@ -156,10 +156,10 @@ public class TabletStatusBar extends BaseStatusBar implements
     int mNotificationPeekTapDuration;
     int mNotificationFlingVelocity;
 
-    BatteryController mBatteryController;
     BluetoothController mBluetoothController;
     LocationController mLocationController;
     NetworkController mNetworkController;
+    BatteryController mBatteryController;
     DoNotDisturb mDoNotDisturb;
 
     ViewGroup mBarContents;
@@ -264,11 +264,6 @@ public class TabletStatusBar extends BaseStatusBar implements
         mNotificationPanel.show(false, false);
         mNotificationPanel.setOnTouchListener(
                 new TouchOutsideListener(MSG_CLOSE_NOTIFICATION_PANEL, mNotificationPanel));
-
-        // the battery icon
-        mBatteryController.addIconView((ImageView)mNotificationPanel.findViewById(R.id.battery));
-        mBatteryController.addLabelView(
-                (TextView)mNotificationPanel.findViewById(R.id.battery_text));
 
         // Bt
         mBluetoothController.addIconView(
@@ -560,11 +555,9 @@ public class TabletStatusBar extends BaseStatusBar implements
         // watch the PREF_DO_NOT_DISTURB and convert to appropriate disable() calls
         mDoNotDisturb = new DoNotDisturb(mContext);
 
-        mBatteryController = new BatteryController(mContext);
-        mBatteryController.addIconView((ImageView)sb.findViewById(R.id.battery));
-
         final CircleBattery circleBattery =
                 (CircleBattery) sb.findViewById(R.id.circle_battery);
+	mBatteryController = new BatteryController(mContext);
         mBatteryController.addStateChangedCallback(circleBattery);
 
         mBluetoothController = new BluetoothController(mContext);

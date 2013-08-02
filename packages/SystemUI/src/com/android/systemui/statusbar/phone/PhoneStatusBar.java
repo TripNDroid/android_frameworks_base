@@ -103,6 +103,7 @@ import com.android.systemui.statusbar.SignalClusterTextView;
 import com.android.systemui.statusbar.SignalClusterView;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.policy.BatteryController;
+import com.android.systemui.statusbar.policy.SbBatteryController;
 import com.android.systemui.statusbar.policy.CircleBattery;
 import com.android.systemui.statusbar.policy.CircleDockBattery;
 import com.android.systemui.statusbar.policy.Clock;
@@ -171,6 +172,7 @@ public class PhoneStatusBar extends BaseStatusBar {
     // These are no longer handled by the policy, because we need custom strategies for them
     BluetoothController mBluetoothController;
     BatteryController mBatteryController;
+    SbBatteryController mSbBatteryController;
     DockBatteryController mDockBatteryController;
     LocationController mLocationController;
     NetworkController mNetworkController;
@@ -199,6 +201,8 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     // left-hand icons
     LinearLayout mStatusIcons;
+    // layout for center clock
+    LinearLayout mCenterClockLayout;
     // the icons themselves
     IconMerger mNotificationIcons;
     // [+>
@@ -605,7 +609,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         // Other icons
         mLocationController = new LocationController(mContext); // will post a notification
         mBatteryController = new BatteryController(mContext);
-        mBatteryController.addIconView((ImageView)mStatusBarView.findViewById(R.id.battery));
+        mSbBatteryController = (SbBatteryController)mStatusBarView.findViewById(R.id.battery_cluster);
         mBatteryController.addLabelView((TextView)mStatusBarView.findViewById(R.id.battery_text));
 
         mCircleBattery = (CircleBattery) mStatusBarView.findViewById(R.id.circle_battery);

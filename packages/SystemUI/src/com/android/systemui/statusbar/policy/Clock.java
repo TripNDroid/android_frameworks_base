@@ -311,4 +311,3 @@ public class Clock extends TextView implements OnClickListener, OnLongClickListe
         return true;
     }
 }
-

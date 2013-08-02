@@ -4961,6 +4961,7 @@ public class WindowManagerService extends IWindowManager.Stub
                 mAnimatorDurationScale };
     }
 
+
     // Called by window manager policy. Not exposed externally.
     @Override
     public int getLidState() {
