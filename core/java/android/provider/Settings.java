@@ -2273,6 +2273,12 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_ROTATION = "lockscreen_rotation";
 
+         /**
+         * Whether to use the carousel as widget container
+         * @hide
+         */
+        public static final String LOCKSCREEN_USE_WIDGET_CONTAINER_CAROUSEL = "lockscreen_use_widget_container_carousel";
+
         /**
          * Control the type of rotation which can be performed using the accelerometer
          * if ACCELEROMETER_ROTATION is enabled.
