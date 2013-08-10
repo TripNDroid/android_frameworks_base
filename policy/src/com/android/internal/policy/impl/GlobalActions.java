@@ -401,7 +401,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
         // next: airplane mode
         boolean showAirplaneMode = Settings.System.getIntForUser(cr,
-                Settings.System.POWER_MENU_AIRPLANE_ENABLED, 1, UserHandle.USER_CURRENT) == 1;
+                Settings.System.POWER_MENU_AIRPLANE_ENABLED, 0, UserHandle.USER_CURRENT) == 1;
         if (showAirplaneMode) {
             mItems.add(mAirplaneModeOn);
         }
