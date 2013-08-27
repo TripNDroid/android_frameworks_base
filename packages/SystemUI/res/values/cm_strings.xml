@@ -27,9 +27,6 @@
     <string name="bean_dream_settings_cid_title">Use Cid\'s head</string>
     <string name="bean_dream_settings_cid_summary">Use Cid\'s head instead of jellybeans inside the dream</string>
 
-    <!-- QuickSettings: Profile [CHAR LIMIT=NONE] -->
-    <string name="quick_settings_profile_label">Profile</string>
-
     <!-- Power widget -->
     <string name="powerwidget_screen_timeout_toast">Screen timeout set to: %1$d %2$s</string>
 

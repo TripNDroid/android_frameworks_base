@@ -22,8 +22,6 @@ import android.app.Activity;
 import android.app.ActivityManagerNative;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.Profile;
-import android.app.ProfileManager;
 import android.app.SearchManager;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
@@ -249,8 +247,6 @@ public class KeyguardViewMediator {
     private int mLockSoundId;
     private int mUnlockSoundId;
     private int mLockSoundStreamId;
-
-    private ProfileManager mProfileManager;
 
     private int mSlideLockDelay;
 
@@ -520,8 +516,6 @@ public class KeyguardViewMediator {
         mKeyguardViewManager = new KeyguardViewManager(context, wm, mViewMediatorCallback,
                 mLockPatternUtils);
 
-        mProfileManager = (ProfileManager) context.getSystemService(Context.PROFILE_SERVICE);
-
         mUserPresentIntent = new Intent(Intent.ACTION_USER_PRESENT);
         mUserPresentIntent.addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING
                 | Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT);
@@ -729,13 +723,7 @@ public class KeyguardViewMediator {
             if (DEBUG) Log.d(TAG, "isKeyguardDisabled: keyguard is disabled by setting");
             return true;
         }
-        Profile profile = mProfileManager.getActiveProfile();
-        if (profile != null) {
-            if (profile.getScreenLockModeWithDPM(mContext) == Profile.LockMode.DISABLE) {
-                if (DEBUG) Log.d(TAG, "isKeyguardDisabled: keyguard is disabled by profile");
-                return true;
-            }
-        }
+
         return false;
     }
 
@@ -931,7 +919,7 @@ public class KeyguardViewMediator {
             return;
         }
 
-        // if we're disabled by an app or profile, don't show
+        // if we're disabled don't show
         if (!lockedOrMissing && isKeyguardDisabled()) {
             if (DEBUG) Log.d(TAG, "doKeyguard: not showing because keyguard is disabled");
             return;

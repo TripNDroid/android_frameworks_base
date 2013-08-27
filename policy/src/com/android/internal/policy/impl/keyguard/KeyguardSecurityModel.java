@@ -15,8 +15,6 @@
  */
 package com.android.internal.policy.impl.keyguard;
 
-import android.app.Profile;
-import android.app.ProfileManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
@@ -44,13 +42,9 @@ public class KeyguardSecurityModel {
     private Context mContext;
     private LockPatternUtils mLockPatternUtils;
 
-    // We can use the profile manager to override security
-    private ProfileManager mProfileManager;
-
     KeyguardSecurityModel(Context context) {
         mContext = context;
         mLockPatternUtils = new LockPatternUtils(context);
-        mProfileManager = (ProfileManager) context.getSystemService(Context.PROFILE_SERVICE);
     }
 
     void setLockPatternUtils(LockPatternUtils utils) {
@@ -88,7 +82,7 @@ public class KeyguardSecurityModel {
         } else if (simState == IccCardConstants.State.PUK_REQUIRED
                 && mLockPatternUtils.isPukUnlockScreenEnable()) {
             mode = SecurityMode.SimPuk;
-        } else if (mProfileManager.getActiveProfile().getScreenLockModeWithDPM(mContext) != Profile.LockMode.INSECURE) {
+        } else {
             final int security = mLockPatternUtils.getKeyguardStoredPasswordQuality();
             switch (security) {
                 case DevicePolicyManager.PASSWORD_QUALITY_NUMERIC:
