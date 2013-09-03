@@ -2778,21 +2778,56 @@ public final class Settings {
          *
          * @hide
          */
-        public static final String APP_SIDE_BAR_ENABLED = "app_sidebar_enabled";
+        public static final String APP_SIDEBAR_ENABLED = "app_sidebar_enabled";
 
         /**
-         * How to sort and order the items in the app sidebar
-         *
-         * @hide
-         */
-        public static final String APP_SIDEBAR_SORT_TYPE = "app_sidebar_sort_type";
-
-        /**
-         * How to sort and order the items in the app sidebar
+         * Se the transparency of the sidebar
          *
          * @hide
          */
         public static final String APP_SIDEBAR_TRANSPARENCY = "app_sidebar_transparency";
+
+        /**
+         * Disable the labels of the sidebar
+         *
+         * @hide
+         */
+        public static final String APP_SIDEBAR_DISABLE_LABELS = "app_sidebar_disable_labels";
+
+        /**
+         * Position of app sidebar
+         *
+         * @hide
+         */
+        public static final String APP_SIDEBAR_POSITION = "app_sidebar_position";
+
+        /**
+         * Width of the appbar trigger
+         *
+         * @hide
+         */
+        public static final String APP_SIDEBAR_TRIGGER_WIDTH = "app_sidebar_trigger_width";
+
+        /**
+         * Position of appbar trigger
+         *
+         * @hide
+         */
+        public static final String APP_SIDEBAR_TRIGGER_TOP = "app_sidebar_trigger_top";
+
+         /**
+          * Height of the appbar trigger
+          *
+          * @hide
+          */
+        public static final String APP_SIDEBAR_TRIGGER_HEIGHT = "app_sidebar_trigger_height";
+ 
+         /**
+          * Whether to display the trigger region or not
+          *
+          * @hide
+          */
+        public static final String APP_SIDEBAR_SHOW_TRIGGER = "app_sidebar_show_trigger";
 
         /**
          * Quick Settings Panel Tiles to Use
