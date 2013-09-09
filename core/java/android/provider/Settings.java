@@ -3549,6 +3549,12 @@ public final class Settings {
          */
         public static final String VIBRATE_NOTIF_EXPAND = "vibrate_notif_expand";
 
+         /**
+        * User interface mode. This is used to change from singlepane mode forcing it to
+        * Change into multipane mode. Default is disabled.
+        */
+        public static final String FORCE_DUAL_PANEL = "force_dualpanel";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
