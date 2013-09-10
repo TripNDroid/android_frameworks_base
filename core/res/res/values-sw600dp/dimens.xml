@@ -76,7 +76,7 @@
 
     <!-- Preference fragment padding, sides -->
     <dimen name="preference_fragment_padding_side">24dp</dimen>
-    <dimen name="preference_screen_header_padding_side">24dip</dimen>
+    <dimen name="preference_screen_header_padding_side">12dip</dimen>
 
     <!-- Keyguard dimensions -->
     <!-- Size of the clock font in keyguard's status view -->

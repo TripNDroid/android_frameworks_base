@@ -132,7 +132,7 @@
     <!-- Preference activity, vertical padding for the header list -->
     <dimen name="preference_screen_header_vertical_padding">0dp</dimen>
 
-    <dimen name="preference_screen_header_padding_side">16dip</dimen>
+    <dimen name="preference_screen_header_padding_side">8dip</dimen>
     <integer name="preference_screen_header_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
 
     <integer name="preference_fragment_scrollbarStyle">0x02000000</integer> <!-- outsideOverlay -->
@@ -167,13 +167,13 @@
     <!-- Vertical padding around action bar icons. -->
     <dimen name="action_bar_icon_vertical_padding">8dip</dimen>
     <!-- Text size for action bar titles -->
-    <dimen name="action_bar_title_text_size">18dp</dimen>
+    <dimen name="action_bar_title_text_size">19dp</dimen>
     <!-- Text size for action bar subtitles -->
     <dimen name="action_bar_subtitle_text_size">14dp</dimen>
     <!-- Top margin for action bar subtitles -->
     <dimen name="action_bar_subtitle_top_margin">-3dp</dimen>
     <!-- Bottom margin for action bar subtitles -->
-    <dimen name="action_bar_subtitle_bottom_margin">5dip</dimen>
+    <dimen name="action_bar_subtitle_bottom_margin">4dip</dimen>
 
     <!-- Size of clock font in LockScreen on Unsecure unlock screen. -->
     <dimen name="keyguard_lockscreen_clock_font_size">80dip</dimen>

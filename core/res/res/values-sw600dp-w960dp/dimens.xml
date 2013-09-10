@@ -15,7 +15,7 @@
 -->
 
 <resources>
-    <dimen name="preference_screen_header_padding_side">48dp</dimen>
+    <dimen name="preference_screen_header_padding_side">24dp</dimen>
     <!-- Preference fragment padding, sides -->
     <dimen name="preference_fragment_padding_side">48dp</dimen>
 </resources>
