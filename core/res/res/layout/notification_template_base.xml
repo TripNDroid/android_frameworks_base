@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:layout_weight="1"
                 />
@@ -82,7 +82,7 @@
             android:layout_marginStart="8dp"
             android:singleLine="true"
             android:fadingEdge="horizontal"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:visibility="gone"
             />
         <ProgressBar
@@ -108,7 +108,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:singleLine="true"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 />
             <TextView android:id="@+id/info"

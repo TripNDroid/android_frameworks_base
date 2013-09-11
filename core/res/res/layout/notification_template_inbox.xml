@@ -36,7 +36,7 @@
         android:layout_marginStart="@dimen/notification_large_icon_width"
         android:minHeight="@dimen/notification_large_icon_height"
         android:orientation="vertical"
-        android:paddingTop="0dp"
+        android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:gravity="top"
         >
@@ -62,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:ellipsize="marquee"
+                    android:ellipsize="end"
                     android:fadingEdge="horizontal"
                     android:layout_weight="1"
                     />
@@ -91,7 +91,7 @@
                 android:layout_marginEnd="8dp"
                 android:singleLine="true"
                 android:fadingEdge="horizontal"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:visibility="gone"
                 android:layout_weight="0"
                 />
@@ -203,10 +203,9 @@
         </LinearLayout>
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="1dip"
+            android:layout_height="wrap_content"
             android:layout_marginTop="-1px"
-            android:id="@+id/action_divider"
-            android:background="?android:attr/dividerHorizontal" />
+            android:id="@+id/action_divider" />
         <include
             layout="@layout/notification_action_list"
             android:layout_width="match_parent"
@@ -215,11 +214,10 @@
             />
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="1dip"
+            android:layout_height="wrap_content"
             android:layout_marginTop="-1px"
             android:id="@+id/overflow_divider"
-            android:visibility="visible"
-            android:background="?android:attr/dividerHorizontal" />
+            android:visibility="visible" />
         <LinearLayout
             android:id="@+id/line3"
             android:layout_width="match_parent"
@@ -239,7 +237,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:singleLine="true"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 />
             <TextView android:id="@+id/info"

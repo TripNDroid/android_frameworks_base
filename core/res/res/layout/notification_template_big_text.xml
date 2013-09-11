@@ -34,7 +34,7 @@
         android:layout_gravity="fill_vertical"
         android:layout_marginStart="@dimen/notification_large_icon_width"
         android:orientation="vertical"
-        android:paddingTop="0dp"
+        android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:gravity="top"
         >
@@ -51,7 +51,7 @@
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
+                android:paddingTop="6dp"
                 android:orientation="horizontal"
                 android:layout_gravity="top"
                 android:layout_weight="0"
@@ -61,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:ellipsize="marquee"
+                    android:ellipsize="end"
                     android:fadingEdge="horizontal"
                     android:layout_weight="1"
                     />
@@ -118,8 +118,8 @@
         </LinearLayout>
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_marginTop="-1px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-1.5dp"
             android:id="@+id/action_divider"
             android:visibility="gone"
             android:background="?android:attr/dividerHorizontal" />
@@ -132,9 +132,9 @@
             />
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="wrap_content"
             android:id="@+id/overflow_divider"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:visibility="visible"
             android:background="?android:attr/dividerHorizontal" />
         <LinearLayout
@@ -155,7 +155,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:singleLine="true"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 />
             <TextView android:id="@+id/info"
