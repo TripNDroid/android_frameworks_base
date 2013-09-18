@@ -3556,6 +3556,24 @@ public final class Settings {
         */
         public static final String FORCE_DUAL_PANEL = "force_dualpanel";
 
+         /**
+         * Navigation Bar show switch
+         * @hide
+         */
+        public static final String DEV_FORCE_SHOW_NAVBAR = "dev_force_show_navbar";
+
+        /**
+         * Navigation Bar - Menu button enable override
+         * @hide
+         */
+        /* public static final String DEV_MENU_BUTTON_ENABLED = "menu_button_enabled"; */
+
+        /**
+         * Navigation Bar - Back button enable override
+         * @hide
+         */
+        public static final String DEV_BACK_BUTTON_ENABLED = "back_button_enabled";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
