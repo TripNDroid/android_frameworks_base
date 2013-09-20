@@ -675,10 +675,6 @@ public abstract class BaseStatusBar extends SystemUI implements
                             .getDimensionPixelSize(com.android.internal.R.dimen.status_bar_height);
                     float recentsItemTopPadding = statusBarHeight;
 
-                    if (getExpandedDesktopMode() == 2) {
-                        statusBarHeight = 0;
-                    }
-
                     float height = thumbTopMargin
                             + thumbHeight
                             + 2 * thumbBgPadding + textPadding + labelTextHeight
@@ -1286,17 +1282,6 @@ public abstract class BaseStatusBar extends SystemUI implements
     public boolean inKeyguardRestrictedInputMode() {
         KeyguardManager km = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         return km.inKeyguardRestrictedInputMode();
-    }
-
-    public int getExpandedDesktopMode() {
-        ContentResolver resolver = mContext.getContentResolver();
-        boolean expanded = Settings.System.getIntForUser(resolver,
-                Settings.System.EXPANDED_DESKTOP_STATE, 0, UserHandle.USER_CURRENT) == 1;
-        if (expanded) {
-            return Settings.System.getIntForUser(resolver,
-                    Settings.System.EXPANDED_DESKTOP_STYLE, 0, UserHandle.USER_CURRENT);
-        }
-        return 0;
     }
 
     public void addNavigationBarCallback(NavigationBarCallback callback) {
