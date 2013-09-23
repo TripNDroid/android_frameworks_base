@@ -44,7 +44,7 @@
             android:fadingEdge="vertical"
             android:scrollbars="none"
             android:fadingEdgeLength="@dimen/status_bar_recents_scroll_fading_edge_length"
-            android:layout_gravity="bottom|start"
+            android:layout_gravity="start|bottom|center"
             android:clipToPadding="false"
             android:clipChildren="false">
 

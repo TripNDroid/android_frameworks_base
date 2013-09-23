@@ -47,7 +47,7 @@
             android:fadingEdge="vertical"
             android:scrollbars="none"
             android:fadingEdgeLength="20dip"
-            android:layout_gravity="bottom|start"
+            android:layout_gravity="start|bottom|center"
             android:clipToPadding="false"
             android:clipChildren="false"
             android:fitsSystemWindows="true">
