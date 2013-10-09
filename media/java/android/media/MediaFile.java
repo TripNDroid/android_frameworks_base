@@ -82,8 +82,16 @@ public class MediaFile {
     public static final int FILE_TYPE_AVI     = 29;
     public static final int FILE_TYPE_WEBM    = 30;
     public static final int FILE_TYPE_DIVX    = 31;
+    public static final int FILE_TYPE_MXU     = 32;
+    public static final int FILE_TYPE_LSF     = 33;
+    public static final int FILE_TYPE_MPEG    = 34;
+    public static final int FILE_TYPE_QT      = 35;
+    public static final int FILE_TYPE_WM      = 36;
+    public static final int FILE_TYPE_WMX     = 37;
+    public static final int FILE_TYPE_WVX     = 38;
+    public static final int FILE_TYPE_MOVIE   = 39;
     private static final int FIRST_VIDEO_FILE_TYPE = FILE_TYPE_MP4;
-    private static final int LAST_VIDEO_FILE_TYPE = FILE_TYPE_DIVX;
+    private static final int LAST_VIDEO_FILE_TYPE = FILE_TYPE_MOVIE;
 
     // More video file types
     public static final int FILE_TYPE_MP2PS   = 200;
@@ -91,26 +99,26 @@ public class MediaFile {
     private static final int LAST_VIDEO_FILE_TYPE2 = FILE_TYPE_MP2PS;
 
     // Image file types
-    public static final int FILE_TYPE_JPEG    = 32;
-    public static final int FILE_TYPE_GIF     = 33;
-    public static final int FILE_TYPE_PNG     = 34;
-    public static final int FILE_TYPE_BMP     = 35;
-    public static final int FILE_TYPE_WBMP    = 36;
-    public static final int FILE_TYPE_WEBP    = 37;
+    public static final int FILE_TYPE_JPEG    = 41;
+    public static final int FILE_TYPE_GIF     = 42;
+    public static final int FILE_TYPE_PNG     = 43;
+    public static final int FILE_TYPE_BMP     = 44;
+    public static final int FILE_TYPE_WBMP    = 45;
+    public static final int FILE_TYPE_WEBP    = 46;
     private static final int FIRST_IMAGE_FILE_TYPE = FILE_TYPE_JPEG;
     private static final int LAST_IMAGE_FILE_TYPE = FILE_TYPE_WEBP;
 
     // Playlist file types
-    public static final int FILE_TYPE_M3U      = 41;
-    public static final int FILE_TYPE_PLS      = 42;
-    public static final int FILE_TYPE_WPL      = 43;
-    public static final int FILE_TYPE_HTTPLIVE = 44;
+    public static final int FILE_TYPE_M3U      = 51;
+    public static final int FILE_TYPE_PLS      = 52;
+    public static final int FILE_TYPE_WPL      = 53;
+    public static final int FILE_TYPE_HTTPLIVE = 54;
 
     private static final int FIRST_PLAYLIST_FILE_TYPE = FILE_TYPE_M3U;
     private static final int LAST_PLAYLIST_FILE_TYPE = FILE_TYPE_HTTPLIVE;
 
     // Drm file types
-    public static final int FILE_TYPE_FL      = 51;
+    public static final int FILE_TYPE_FL      = 61;
     private static final int FIRST_DRM_FILE_TYPE = FILE_TYPE_FL;
     private static final int LAST_DRM_FILE_TYPE = FILE_TYPE_FL;
 
@@ -227,8 +235,14 @@ public class MediaFile {
         addFileType("WEBM", FILE_TYPE_WEBM, "video/webm");
         addFileType("TS", FILE_TYPE_MP2TS, "video/mp2ts");
         addFileType("MPG", FILE_TYPE_MP2TS, "video/mp2ts");
-
+        addFileType("VOB", FILE_TYPE_MPEG, "video/mpeg");
+        addFileType("MPE", FILE_TYPE_MPEG, "video/mpeg");
         addFileType("AVI", FILE_TYPE_AVI, "video/avi");
+        addFileType("MOV", FILE_TYPE_QT, "video/quicktime");
+        addFileType("QT", FILE_TYPE_QT, "video/quicktime");
+        addFileType("WM", FILE_TYPE_WM, "video/x-ms-wm");
+        addFileType("WMX", FILE_TYPE_WMX, "video/x-ms-wmx");
+        addFileType("WVX", FILE_TYPE_WVX, "video/x-ms-wvx");
 
         if (isWMVEnabled()) {
             addFileType("WMV", FILE_TYPE_WMV, "video/x-ms-wmv", MtpConstants.FORMAT_WMV);
