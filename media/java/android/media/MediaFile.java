@@ -37,6 +37,8 @@ import java.util.Locale;
  * {@hide}
  */
 public class MediaFile {
+    // comma separated list of all file extensions supported by the media scanner
+    public final static String sFileExtensions;
 
     // Audio file types
     public static final int FILE_TYPE_MP3     = 1;
@@ -76,17 +78,17 @@ public class MediaFile {
     public static final int FILE_TYPE_3GPP    = 23;
     public static final int FILE_TYPE_3GPP2   = 24;
     public static final int FILE_TYPE_WMV     = 25;
-    public static final int FILE_TYPE_ASF     = 26;
-    public static final int FILE_TYPE_MKV     = 27;
-    public static final int FILE_TYPE_MP2TS   = 28;
-    public static final int FILE_TYPE_AVI     = 29;
-    public static final int FILE_TYPE_WEBM    = 30;
-    public static final int FILE_TYPE_DIVX    = 31;
+    public static final int FILE_TYPE_AVI     = 26;
+    public static final int FILE_TYPE_MPEG    = 27;
+    public static final int FILE_TYPE_DL      = 28;
+    public static final int FILE_TYPE_DV      = 29;
+    public static final int FILE_TYPE_FLV     = 30;
+    public static final int FILE_TYPE_QT      = 31;
     public static final int FILE_TYPE_MXU     = 32;
-    public static final int FILE_TYPE_LSF     = 33;
-    public static final int FILE_TYPE_MPEG    = 34;
-    public static final int FILE_TYPE_QT      = 35;
-    public static final int FILE_TYPE_WM      = 36;
+    public static final int FILE_TYPE_DIVX    = 33;
+    public static final int FILE_TYPE_MKV     = 34;
+    public static final int FILE_TYPE_ASF     = 35;
+    public static final int FILE_TYPE_WEBM    = 36;
     public static final int FILE_TYPE_WMX     = 37;
     public static final int FILE_TYPE_WVX     = 38;
     public static final int FILE_TYPE_MOVIE   = 39;
@@ -94,9 +96,11 @@ public class MediaFile {
     private static final int LAST_VIDEO_FILE_TYPE = FILE_TYPE_MOVIE;
 
     // More video file types
-    public static final int FILE_TYPE_MP2PS   = 200;
-    private static final int FIRST_VIDEO_FILE_TYPE2 = FILE_TYPE_MP2PS;
-    private static final int LAST_VIDEO_FILE_TYPE2 = FILE_TYPE_MP2PS;
+    public static final int FILE_TYPE_MPEG2  = 200;
+    public static final int FILE_TYPE_MPEG2TS  = 201;
+    public static final int FILE_TYPE_MPEG2PS  = 202;
+    private static final int FIRST_VIDEO_FILE_TYPE2 = FILE_TYPE_MPEG2;
+    private static final int LAST_VIDEO_FILE_TYPE2 = FILE_TYPE_MPEG2PS;
 
     // Image file types
     public static final int FILE_TYPE_JPEG    = 41;
@@ -113,7 +117,6 @@ public class MediaFile {
     public static final int FILE_TYPE_PLS      = 52;
     public static final int FILE_TYPE_WPL      = 53;
     public static final int FILE_TYPE_HTTPLIVE = 54;
-
     private static final int FIRST_PLAYLIST_FILE_TYPE = FILE_TYPE_M3U;
     private static final int LAST_PLAYLIST_FILE_TYPE = FILE_TYPE_HTTPLIVE;
 
@@ -211,6 +214,7 @@ public class MediaFile {
         addFileType("OGA", FILE_TYPE_OGG, "application/ogg", MtpConstants.FORMAT_OGG);
         addFileType("AAC", FILE_TYPE_AAC, "audio/aac", MtpConstants.FORMAT_AAC);
         addFileType("AAC", FILE_TYPE_AAC, "audio/aac-adts", MtpConstants.FORMAT_AAC);
+        addFileType("DTS", FILE_TYPE_DTS, "audio/dts");
         addFileType("MKA", FILE_TYPE_MKA, "audio/x-matroska");
 
         addFileType("MID", FILE_TYPE_MID, "audio/midi");
@@ -231,19 +235,31 @@ public class MediaFile {
         addFileType("3GPP", FILE_TYPE_3GPP, "video/3gpp", MtpConstants.FORMAT_3GP_CONTAINER);
         addFileType("3G2", FILE_TYPE_3GPP2, "video/3gpp2", MtpConstants.FORMAT_3GP_CONTAINER);
         addFileType("3GPP2", FILE_TYPE_3GPP2, "video/3gpp2", MtpConstants.FORMAT_3GP_CONTAINER);
-        addFileType("MKV", FILE_TYPE_MKV, "video/x-matroska");
-        addFileType("WEBM", FILE_TYPE_WEBM, "video/webm");
-        addFileType("TS", FILE_TYPE_MP2TS, "video/mp2ts");
-        addFileType("MPG", FILE_TYPE_MP2TS, "video/mp2ts");
+
+        addFileType("WMV", FILE_TYPE_WMV, "video/x-ms-wmv");
+        addFileType("MPEG", FILE_TYPE_MPEG2, "video/mpeg2");
+        addFileType("TS", FILE_TYPE_MPEG2TS, "video/mpegts");
+        addFileType("TS", FILE_TYPE_MPEG2PS, "video/mp2p");
+        addFileType("M2TS", FILE_TYPE_MPEG2TS, "video/mpegts");
+        addFileType("M2TS", FILE_TYPE_MPEG2PS, "video/mp2p");
         addFileType("VOB", FILE_TYPE_MPEG, "video/mpeg");
         addFileType("MPE", FILE_TYPE_MPEG, "video/mpeg");
         addFileType("AVI", FILE_TYPE_AVI, "video/avi");
+        addFileType("DL", FILE_TYPE_DL, "video/dl");
+        addFileType("DIF", FILE_TYPE_DV, "video/dv");
+        addFileType("DV", FILE_TYPE_DV, "video/dv");
+        addFileType("FLV", FILE_TYPE_FLV, "video/x-flv");
         addFileType("MOV", FILE_TYPE_QT, "video/quicktime");
         addFileType("QT", FILE_TYPE_QT, "video/quicktime");
-        addFileType("WM", FILE_TYPE_WM, "video/x-ms-wm");
+        addFileType("MXU", FILE_TYPE_MXU, "video/vnd.mpegurl");
+        addFileType("DIVX", FILE_TYPE_DIVX, "video/divx");
+        addFileType("MKV", FILE_TYPE_MKV, "video/x-matroska");
+        addFileType("WEBM", FILE_TYPE_WEBM, "video/webm");
+        addFileType("ASF", FILE_TYPE_ASF, "video/x-ms-asf");
+        addFileType("ASX", FILE_TYPE_ASF, "video/x-ms-asf");
         addFileType("WMX", FILE_TYPE_WMX, "video/x-ms-wmx");
         addFileType("WVX", FILE_TYPE_WVX, "video/x-ms-wvx");
-
+        addFileType("MOVIE", FILE_TYPE_MOVIE, "video/ffmpeg");
         if (isWMVEnabled()) {
             addFileType("WMV", FILE_TYPE_WMV, "video/x-ms-wmv", MtpConstants.FORMAT_WMV);
             addFileType("ASF", FILE_TYPE_ASF, "video/x-ms-asf");
@@ -276,9 +292,21 @@ public class MediaFile {
         addFileType("PPT", FILE_TYPE_MS_POWERPOINT, "application/mspowerpoint", MtpConstants.FORMAT_MS_POWERPOINT_PRESENTATION);
         addFileType("FLAC", FILE_TYPE_FLAC, "audio/flac", MtpConstants.FORMAT_FLAC);
         addFileType("ZIP", FILE_TYPE_ZIP, "application/zip");
-        addFileType("MPG", FILE_TYPE_MP2PS, "video/mp2p");
-        addFileType("MPEG", FILE_TYPE_MP2PS, "video/mp2p");
+
+        // compute file extensions list for native Media Scanner
+        StringBuilder builder = new StringBuilder();
+        Iterator<String> iterator = sFileTypeMap.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            if (builder.length() > 0) {
+                builder.append(',');
+            }
+            builder.append(iterator.next());
+        }
+        sFileExtensions = builder.toString();
     }
+
+    public static final String UNKNOWN_STRING = "<unknown>";
 
     public static boolean isAudioFileType(int fileType) {
         return ((fileType >= FIRST_AUDIO_FILE_TYPE &&
