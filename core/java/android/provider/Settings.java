@@ -3580,6 +3580,13 @@ public final class Settings {
          */
         public static final String DEV_BACK_BUTTON_ENABLED = "back_button_enabled";
 
+         /**
+         * Whether or not to use a center clock in phone status bar
+         *
+         * @hide
+         */
+        public static final String STATUS_BAR_CENTER_CLOCK = "status_bar_center_clock";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
