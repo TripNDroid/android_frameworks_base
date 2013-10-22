@@ -533,8 +533,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                     R.layout.msim_super_status_bar, null);
         } else {
             mStatusBarWindow = (StatusBarWindowView) View.inflate(context,
-                mUseCenterClock ? R.layout.super_status_bar_center_clock : R.layout.msim_super_status_bar,
-                null);
+                    R.layout.super_status_bar, null);
         }
         mStatusBarWindow.mService = this;
         mStatusBarWindow.setOnTouchListener(new View.OnTouchListener() {
