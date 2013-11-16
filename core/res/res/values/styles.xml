@@ -232,7 +232,9 @@ please see styles_device_defaults.xml.
     <style name="TextAppearance.StatusBar.Ticker">
     </style>
     <style name="TextAppearance.StatusBar.Title">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffffff</item>
     </style>
 
     <style name="TextAppearance.StatusBar.Icon">
@@ -243,20 +245,20 @@ please see styles_device_defaults.xml.
         <item name="android:textSize">@dimen/notification_text_size</item>
     </style>
     <style name="TextAppearance.StatusBar.EventContent.Title">
-        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">20.0dip</item>
+        <item name="android:textColor">#ffffffff</item>
         <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">@dimen/notification_title_text_size</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">italic</item>
     </style>
     <style name="TextAppearance.StatusBar.EventContent.Line2">
-        <item name="android:textSize">@dimen/notification_subtext_size</item>
+        <item name="android:textSize">12.0dip</item>
     </style>
     <style name="TextAppearance.StatusBar.EventContent.Info">
-        <item name="android:textSize">@dimen/notification_subtext_size</item>
+        <item name="android:textSize">12.0dip</item>
         <item name="android:textColor">#999999</item>
     </style>
     <style name="TextAppearance.StatusBar.EventContent.Time">
-        <item name="android:textSize">@dimen/notification_subtext_size</item>
+        <item name="android:textSize">12.0dip</item>
         <item name="android:textColor">#999999</item>
     </style>
     <style name="TextAppearance.StatusBar.EventContent.Emphasis">
@@ -1436,9 +1438,9 @@ please see styles_device_defaults.xml.
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.Holo.DialogWindowTitle">
+    <style name="TextAppearance.Holo.DialogWindowTitle" parent="TextAppearance.Holo">
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@android:color/holo_blue_light</item>
+        <item name="android:textColor">#ff33b5e5</item>
     </style>
 
     <style name="TextAppearance.Holo.CalendarViewWeekDayView" parent="TextAppearance.Small.CalendarViewWeekDayView">
@@ -1535,9 +1537,9 @@ please see styles_device_defaults.xml.
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.Holo.Light.DialogWindowTitle">
+    <style name="TextAppearance.Holo.Light.DialogWindowTitle" parent="TextAppearance.Holo">
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@android:color/holo_blue_light</item>
+        <item name="android:textColor">#ff202022</item>
     </style>
 
     <style name="TextAppearance.Holo.Light.CalendarViewWeekDayView" parent="TextAppearance.Small.CalendarViewWeekDayView">
