@@ -63,9 +63,10 @@
     <string name="privacy_guard_notification_detail"><xliff:g id="app">%1$s</xliff:g> hat keinen Zugriff auf persönliche Daten</string>
     <string name="profile_picker_title">Profil</string>
     <string name="profile_none">Kein Profil</string>
-    <string name="permlab_cancelNotifications">Anwendungs-Benachrichtigungen entfernen</string>
-    <string name="permdesc_cancelNotifications">Ermöglicht der App, von anderen Apps erstellte Benachrichtigungen zu entfernen.</string>
     <string name="perf_profile_pwrsv">Energie sparen</string>
     <string name="perf_profile_bal">Ausgeglichen</string>
     <string name="perf_profile_perf">Mehr Leistung</string>
-</resources>
+
+    <!-- Untranslated AOSP strings -->
+    <string name="transient_navigation_confirmation_long">Von der Seite des Displays aus wischen, um die Navigationsleiste einzublenden</string>
+ </resources>
