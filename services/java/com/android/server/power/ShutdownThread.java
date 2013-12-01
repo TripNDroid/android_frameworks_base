@@ -117,88 +117,62 @@ public final class ShutdownThread extends Thread {
             }
         }
 
-        final int titleResourceId;
-        final int resourceId;
+        final int longPressBehavior = context.getResources().getInteger(
+                        com.android.internal.R.integer.config_longPressOnPowerBehavior);
+        final int resourceId = mRebootSafeMode
+                ? com.android.internal.R.string.reboot_safemode_confirm
+                : (longPressBehavior == 2
+                        ? com.android.internal.R.string.shutdown_confirm_question
+                        : com.android.internal.R.string.shutdown_confirm);
 
-        Log.d(TAG, "Notifying thread to start shutdown");
-
-        if (mRebootSafeMode) {
-            titleResourceId = com.android.internal.R.string.reboot_safemode_title;
-            resourceId = com.android.internal.R.string.reboot_safemode_confirm;
-        } else if (mReboot) {
-            titleResourceId = com.android.internal.R.string.reboot_system;
-            resourceId = com.android.internal.R.string.reboot_confirm;
-        } else {
-
-            final int longPressBehavior = context.getResources().getInteger(
-                            com.android.internal.R.integer.config_longPressOnPowerBehavior);
-
-            titleResourceId = com.android.internal.R.string.power_off;
-            if (longPressBehavior == 2) {
-                resourceId = com.android.internal.R.string.shutdown_confirm_question;
-            } else {
-                resourceId = com.android.internal.R.string.shutdown_confirm;
-            }
-
-            Log.d(TAG, "longPressBehavior=" + longPressBehavior);
-        }
+        Log.d(TAG, "Notifying thread to start shutdown longPressBehavior=" + longPressBehavior);
 
         if (confirm) {
             final CloseDialogReceiver closer = new CloseDialogReceiver(context);
             if (sConfirmDialog != null) {
                 sConfirmDialog.dismiss();
-                sConfirmDialog = null;
             }
-            if (mReboot && !mRebootSafeMode) {
-                // See if the advanced reboot menu is enabled and check the keyguard state
-                boolean advancedReboot = Settings.Secure.getInt(context.getContentResolver(),
-                        Settings.Secure.ADVANCED_REBOOT, 0) == 1;
-                KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-                boolean locked = km.inKeyguardRestrictedInputMode();
+            if (mReboot && !mRebootSafeMode){
+                sConfirmDialog = new AlertDialog.Builder(context)
+                        .setTitle(com.android.internal.R.string.reboot_system)
+                        .setSingleChoiceItems(com.android.internal.R.array.shutdown_reboot_options, 0, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which < 0)
+                                    return;
 
-                if (advancedReboot && !locked) {
-                    // Include options in power menu for rebooting into recovery or bootloader
-                    sConfirmDialog = new AlertDialog.Builder(context)
-                            .setTitle(titleResourceId)
-                            .setSingleChoiceItems(com.android.internal.R.array.shutdown_reboot_options, 0, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (which < 0)
-                                        return;
+                                String actions[] = context.getResources().getStringArray(com.android.internal.R.array.shutdown_reboot_actions);
 
-                                    String actions[] = context.getResources().getStringArray(com.android.internal.R.array.shutdown_reboot_actions);
-
-                                    if (actions != null && which < actions.length)
-                                        mRebootReason = actions[which];
-                                }
-                            })
-                            .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mReboot = true;
-                                    beginShutdownSequence(context);
-                                }
-                            })
-                            .setNegativeButton(com.android.internal.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                                if (actions != null && which < actions.length)
+                                    mRebootReason = actions[which];
+                            }
+                        })
+                        .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mReboot = true;
+                                beginShutdownSequence(context);
+                            }
+                        })
+                        .setNegativeButton(com.android.internal.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mReboot = false;
+                                dialog.cancel();
+                            }
+                        })
+                        .create();
+                        sConfirmDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                            public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
                                     mReboot = false;
                                     dialog.cancel();
                                 }
-                            })
-                            .create();
-                            sConfirmDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-                                public boolean onKey (DialogInterface dialog, int keyCode, KeyEvent event) {
-                                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                                        mReboot = false;
-                                        dialog.cancel();
-                                    }
-                                    return true;
-                                }
-                            });
-                }
-            }
-
-            if (sConfirmDialog == null) {
+                                return true;
+                            }
+                        });
+            } else {
                 sConfirmDialog = new AlertDialog.Builder(context)
-                        .setTitle(titleResourceId)
+                        .setTitle(mRebootSafeMode
+                                ? com.android.internal.R.string.reboot_safemode_title
+                                : com.android.internal.R.string.power_off)
                         .setMessage(resourceId)
                         .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
