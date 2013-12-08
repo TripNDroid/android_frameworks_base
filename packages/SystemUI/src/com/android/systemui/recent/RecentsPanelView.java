@@ -783,11 +783,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         popup.getMenuInflater().inflate(R.menu.recent_popup_menu, popup.getMenu());
 
         final ContentResolver cr = mContext.getContentResolver();
-        if (Settings.Secure.getInt(cr,
-            Settings.Secure.DEVELOPMENT_SHORTCUT, 0) == 0) {
-            popup.getMenu().findItem(R.id.recent_force_stop).setVisible(false);
-            popup.getMenu().findItem(R.id.recent_wipe_app).setVisible(false);
-        } else {
             ViewHolder viewHolder = (ViewHolder) selectedView.getTag();
             if (viewHolder != null) {
                 final TaskDescription ad = viewHolder.taskDescription;
@@ -809,7 +804,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                     Log.e(TAG, "Failed looking up ApplicationInfo for " + ad.packageName, ex);
                 }
             }
-        }
+
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.recent_remove_item) {

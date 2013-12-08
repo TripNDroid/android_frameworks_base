@@ -460,13 +460,6 @@ public abstract class BaseStatusBar extends SystemUI implements
                         R.menu.notification_popup_menu,
                         mNotificationBlamePopup.getMenu());
                 final ContentResolver cr = mContext.getContentResolver();
-                if (Settings.Secure.getInt(cr,
-                        Settings.Secure.DEVELOPMENT_SHORTCUT, 0) == 0) {
-                    mNotificationBlamePopup.getMenu()
-                            .findItem(R.id.notification_inspect_item_force_stop).setVisible(false);
-                    mNotificationBlamePopup.getMenu()
-                            .findItem(R.id.notification_inspect_item_wipe_app).setVisible(false);
-                } else {
                     try {
                         PackageManager pm = (PackageManager) mContext.getPackageManager();
                         ApplicationInfo mAppInfo = pm.getApplicationInfo(packageNameF, 0);
@@ -482,7 +475,6 @@ public abstract class BaseStatusBar extends SystemUI implements
                     } catch (NameNotFoundException ex) {
                         Slog.e(TAG, "Failed looking up ApplicationInfo for " + packageNameF, ex);
                     }
-                }
 
                 mNotificationBlamePopup
                 .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
