@@ -48,7 +48,7 @@ public class BatteryTile extends QuickSettingsTile implements BatteryStateChange
     }
 
     @Override
-    public void onBatteryLevelChanged(int level, boolean pluggedIn, int status) {
+    public void onBatteryLevelChanged(int level, boolean pluggedIn) {
         mBatteryLevel = level;
         mPluggedIn = pluggedIn;
         updateResources();
