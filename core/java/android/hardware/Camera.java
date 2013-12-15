@@ -2036,14 +2036,14 @@ public class Camera {
         private static final String KEY_SMOOTH_ZOOM_SUPPORTED = "smooth-zoom-supported";
         private static final String KEY_FOCUS_DISTANCES = "focus-distances";
         private static final String KEY_VIDEO_SIZE = "video-size";
-        private static final String KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO =
-                                            "preferred-preview-size-for-video";
+        private static final String KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO = "preferred-preview-size-for-video";
         private static final String KEY_MAX_NUM_DETECTED_FACES_HW = "max-num-detected-faces-hw";
         private static final String KEY_MAX_NUM_DETECTED_FACES_SW = "max-num-detected-faces-sw";
         private static final String KEY_RECORDING_HINT = "recording-hint";
         private static final String KEY_VIDEO_SNAPSHOT_SUPPORTED = "video-snapshot-supported";
         private static final String KEY_VIDEO_STABILIZATION = "video-stabilization";
         private static final String KEY_VIDEO_STABILIZATION_SUPPORTED = "video-stabilization-supported";
+        private static final String KEY_CAPTURE_MODE = "capture-mode";
 
         // Parameter key suffix for supported values.
         private static final String SUPPORTED_VALUES_SUFFIX = "-values";
@@ -2071,12 +2071,23 @@ public class Camera {
         public static final String EFFECT_WHITEBOARD = "whiteboard";
         public static final String EFFECT_BLACKBOARD = "blackboard";
         public static final String EFFECT_AQUA = "aqua";
+        public static final String EFFECT_GREENTINT = "green-tint";
+        public static final String EFFECT_BLUETINT = "blue-tint";
 
         // Values for antibanding settings.
         public static final String ANTIBANDING_AUTO = "auto";
         public static final String ANTIBANDING_50HZ = "50hz";
         public static final String ANTIBANDING_60HZ = "60hz";
         public static final String ANTIBANDING_OFF = "off";
+
+        // Values for CAPTURE MODE
+        public static final String CAPTURE_MODE_NORMAL = "normal";
+        public static final String CAPTURE_MODE_ZOE = "zoe";
+        public static final String CAPTURE_MODE_CONTI_ZOE = "contizoe";
+        public static final String CAPTURE_MODE_CONTI_BURST = "contiburst";
+        public static final String CAPTURE_MODE_CONTI_BURST_ONE_SHOT = "contiburst-one-shot";
+        public static final String CAPTURE_MODE_HDR = "hdr";
+        public static final String CAPTURE_MODE_PANORAMA = "panorama";
 
         // Values for flash mode settings.
         /**
@@ -3147,6 +3158,8 @@ public class Camera {
          * @see #EFFECT_WHITEBOARD
          * @see #EFFECT_BLACKBOARD
          * @see #EFFECT_AQUA
+         * @see #EFFECT_GREENTINT
+         * @see #EFFECT_BLUETINT
          */
         public String getColorEffect() {
             return get(KEY_EFFECT);
@@ -4106,7 +4119,6 @@ public class Camera {
         /* ### QC ADD-ONS: START */
 
         /* ### QC ADDED PARAMETER KEYS*/
-        private static final String KEY_QC_HFR_SIZE = "hfr-size";
         private static final String KEY_QC_PREVIEW_FRAME_RATE_MODE = "preview-frame-rate-mode";
         private static final String KEY_QC_PREVIEW_FRAME_RATE_AUTO_MODE = "frame-rate-auto";
         private static final String KEY_QC_PREVIEW_FRAME_RATE_FIXED_MODE = "frame-rate-fixed";
@@ -4130,18 +4142,20 @@ public class Camera {
         private static final String KEY_QC_MAX_CONTRAST = "max-contrast";
         private static final String KEY_QC_SATURATION = "saturation";
         private static final String KEY_QC_MAX_SATURATION = "max-saturation";
-        private static final String KEY_QC_DENOISE = "denoise";
         private static final String KEY_QC_CONTINUOUS_AF = "continuous-af";
         private static final String KEY_QC_SELECTABLE_ZONE_AF = "selectable-zone-af";
         private static final String KEY_QC_FACE_DETECTION = "face-detection";
-        private static final String KEY_QC_MEMORY_COLOR_ENHANCEMENT = "mce";
         private static final String KEY_QC_REDEYE_REDUCTION = "redeye-reduction";
         private static final String KEY_QC_ZSL = "zsl";
         private static final String KEY_QC_CAMERA_MODE = "camera-mode";
-        private static final String KEY_QC_VIDEO_HIGH_FRAME_RATE = "video-hfr";
         private static final String KEY_QC_VIDEO_HDR = "video-hdr";
-        private static final String KEY_QC_POWER_MODE = "power-mode";
-        private static final String KEY_QC_POWER_MODE_SUPPORTED = "power-mode-supported";
+        private static final String KEY_VIDEO_HIGH_FRAME_RATE = "video-hfr";
+        private static final String KEY_SUPPORTED_HFR_SIZES = "hfr-size";
+        private static final String KEY_DENOISE = "denoise";
+        private static final String KEY_MEMORY_COLOR_ENHANCEMENT = "mce";
+        private static final String KEY_POWER_MODE = "power-mode";
+        private static final String KEY_POWER_MODE_SUPPORTED = "power-mode-supported";
+
         /** @hide
         * KEY_QC_AE_BRACKET_HDR
         **/
@@ -4172,6 +4186,10 @@ public class Camera {
         * Auto exposure spot metering
         **/
         public static final String AUTO_EXPOSURE_SPOT_METERING = "spot-metering";
+        /** @hide
+        * Auto exposure spot metering
+        **/
+        public static final String AUTO_EXPOSURE_SMART_METERING = "smart-metering";
 
         //Values for ISO settings
         /** @hide
@@ -4371,7 +4389,7 @@ public class Camera {
          *         with at least one element.
          */
          public List<Size> getSupportedHfrSizes() {
-            String str = get(KEY_QC_HFR_SIZE + SUPPORTED_VALUES_SUFFIX);
+            String str = get(KEY_SUPPORTED_HFR_SIZES + SUPPORTED_VALUES_SUFFIX);
             return splitSize(str);
          }
 
@@ -4480,7 +4498,7 @@ public class Camera {
          *         setting is not supported.
          */
          public List<String> getSupportedMemColorEnhanceModes() {
-            String str = get(KEY_QC_MEMORY_COLOR_ENHANCEMENT + SUPPORTED_VALUES_SUFFIX);
+            String str = get(KEY_MEMORY_COLOR_ENHANCEMENT + SUPPORTED_VALUES_SUFFIX);
             return split(str);
          }
 
@@ -4513,7 +4531,7 @@ public class Camera {
          *         setting is not supported.
          */
          public List<String> getSupportedVideoHighFrameRateModes() {
-            String str = get(KEY_QC_VIDEO_HIGH_FRAME_RATE + SUPPORTED_VALUES_SUFFIX);
+            String str = get(KEY_VIDEO_HIGH_FRAME_RATE + SUPPORTED_VALUES_SUFFIX);
             return split(str);
          }
 
@@ -4537,7 +4555,7 @@ public class Camera {
          *
          */
          public List<String> getSupportedDenoiseModes() {
-             String str = get(KEY_QC_DENOISE + SUPPORTED_VALUES_SUFFIX);
+             String str = get(KEY_DENOISE + SUPPORTED_VALUES_SUFFIX);
              return split(str);
          }
 
@@ -4575,6 +4593,17 @@ public class Camera {
             String str = get(KEY_QC_REDEYE_REDUCTION + SUPPORTED_VALUES_SUFFIX);
             return split(str);
         }
+
+        /** @hide
+          * Gets the supported capturemode setting.
+          *
+          * @return a List of KEY_CAPTURE_MODE_XXX string constants. null if auto exposure
+          *         setting is not supported.
+          */
+         public List<String> getSupportedCaptureModes() {
+             String str = get(KEY_CAPTURE_MODE + SUPPORTED_VALUES_SUFFIX);
+             return split(str);
+          }
 
          /** @hide
          * Sets GPS altitude reference. This will be stored in JPEG EXIF header.
@@ -4684,7 +4713,7 @@ public class Camera {
          * @return true if full size video snapshot is supported.
          */
          public boolean isPowerModeSupported() {
-            String str = get(KEY_QC_POWER_MODE_SUPPORTED);
+            String str = get(KEY_POWER_MODE_SUPPORTED);
             return TRUE.equals(str);
          }
 
@@ -4877,7 +4906,7 @@ public class Camera {
          * @see #getPowerMode()
          */
          public void setPowerMode(String value) {
-            set(KEY_QC_POWER_MODE, value);
+            set(KEY_POWER_MODE, value);
          }
 
          /** @hide
@@ -4889,7 +4918,7 @@ public class Camera {
          * @see #POWER_MODE_NORMAL
          */
          public String getPowerMode() {
-            return get(KEY_QC_POWER_MODE);
+            return get(KEY_POWER_MODE);
          }
 
          /** @hide
@@ -4963,7 +4992,7 @@ public class Camera {
          * @return MCE value
          */
          public String getMemColorEnhance() {
-            return get(KEY_QC_MEMORY_COLOR_ENHANCEMENT);
+            return get(KEY_MEMORY_COLOR_ENHANCEMENT);
          }
 
          /** @hide
@@ -4972,7 +5001,7 @@ public class Camera {
          * @return MCE Mode
          */
          public void setMemColorEnhance(String mce) {
-            set(KEY_QC_MEMORY_COLOR_ENHANCEMENT, mce);
+            set(KEY_MEMORY_COLOR_ENHANCEMENT, mce);
          }
 
          /** @hide
@@ -4991,6 +5020,24 @@ public class Camera {
          */
          public void setZSLMode(String zsl) {
             set(KEY_QC_ZSL, zsl);
+         }
+
+         /** @hide
+         * Gets the current Capture Mode Flag.
+         *
+         * @return Capture Mode.
+         */
+         public String getCaptureMode() {
+           return get(KEY_CAPTURE_MODE);
+         }
+
+         /** @hide
+         * Sets the current Camera Mode.
+         *
+         * @return null
+         */
+         public void setCaptureMode(String captureMode) {
+           set(KEY_CAPTURE_MODE, captureMode);
          }
 
          /** @hide
@@ -5019,7 +5066,7 @@ public class Camera {
          * @return VIDEO_HFR_XXX string constants
          */
          public String getVideoHighFrameRate() {
-            return get(KEY_QC_VIDEO_HIGH_FRAME_RATE);
+            return get(KEY_VIDEO_HIGH_FRAME_RATE);
          }
 
          /** @hide
@@ -5028,7 +5075,7 @@ public class Camera {
          * @param hfr VIDEO_HFR_XXX string constants
          */
          public void setVideoHighFrameRate(String hfr) {
-            set(KEY_QC_VIDEO_HIGH_FRAME_RATE, hfr);
+            set(KEY_VIDEO_HIGH_FRAME_RATE, hfr);
          }
 
          /** @hide
@@ -5057,7 +5104,7 @@ public class Camera {
          *
          */
          public String getDenoise() {
-             return get(KEY_QC_DENOISE);
+             return get(KEY_DENOISE);
          }
 
          /** @hide
@@ -5078,7 +5125,7 @@ public class Camera {
          */
 
          public void setDenoise(String value) {
-             set(KEY_QC_DENOISE, value);
+             set(KEY_DENOISE, value);
          }
 
          /** @hide
