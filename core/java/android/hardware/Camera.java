@@ -2055,6 +2055,8 @@ public class Camera {
 
         private static final String KEY_POWER_MODE = "power-mode";
 
+        private static final String KEY_CAPTURE_MODE = "capture-mode";
+
         // Parameter key suffix for supported values.
         private static final String SUPPORTED_VALUES_SUFFIX = "-values";
 
@@ -4993,6 +4995,24 @@ public class Camera {
          */
          public void setZSLMode(String zsl) {
             set(KEY_QC_ZSL, zsl);
+         }
+
+         /** @hide
+         * Gets the current Capture Mode Flag.
+         *
+         * @return Capture Mode.
+         */
+         public String getCaptureMode() {
+           return get(KEY_CAPTURE_MODE);
+         }
+
+         /** @hide
+         * Sets the current Camera Mode.
+         *
+         * @return null
+         */
+         public void setCaptureMode(String captureMode) {
+           set(KEY_CAPTURE_MODE, captureMode);
          }
 
          /** @hide
