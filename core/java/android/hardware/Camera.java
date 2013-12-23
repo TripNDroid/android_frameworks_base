@@ -4646,6 +4646,17 @@ public class Camera {
             return split(str);
         }
 
+        /** @hide
+          * Gets the supported capturemode setting.
+          *
+          * @return a List of KEY_CAPTURE_MODE_XXX string constants. null if auto exposure
+          *         setting is not supported.
+          */
+         public List<String> getSupportedCaptureModes() {
+             String str = get(KEY_CAPTURE_MODE + SUPPORTED_VALUES_SUFFIX);
+             return split(str);
+          }
+
          /** @hide
          * Sets GPS altitude reference. This will be stored in JPEG EXIF header.
          * @param altRef reference GPS altitude in meters.
