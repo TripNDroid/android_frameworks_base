@@ -1808,4 +1808,7 @@
   <!-- Long press kill app -->
   <java-symbol type="integer" name="config_backKillTimeout" />
 
+  <!-- Hardware Key ReMapping -->
+  <java-symbol type="integer" name="config_deviceHardwareKeys" />
+
 </resources>
