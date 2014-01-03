@@ -2417,6 +2417,13 @@ public final class Settings {
          */
         public static final String EGG_MODE = "egg_mode";
 
+         /**
+         * Volume key controls ringtone or media sound stream
+         *
+         * @hide
+         */
+        public static final String VOLUME_KEYS_CONTROL_RING_STREAM = "volume_keys_control_ring_stream";
+
         /**
          * Control the display of the action overflow button within app UI.
          * 0 = use system default
