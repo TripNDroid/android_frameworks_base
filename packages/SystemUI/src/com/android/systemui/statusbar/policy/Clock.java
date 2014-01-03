@@ -16,6 +16,8 @@
 
 package com.android.systemui.statusbar.policy;
 
+import android.app.ActivityManagerNative;
+import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +31,12 @@ import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import android.provider.AlarmClock;
 import com.android.systemui.DemoMode;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import com.android.internal.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,7 +48,7 @@ import libcore.icu.LocaleData;
 /**
  * Digital clock for the status bar.
  */
-public class Clock extends TextView implements DemoMode {
+public class Clock extends TextView implements DemoMode, OnClickListener, OnLongClickListener {
     private boolean mAttached;
     private Calendar mCalendar;
     private String mClockFormatString;
@@ -223,6 +230,40 @@ public class Clock extends TextView implements DemoMode {
             }
             setText(getSmallTime());
         }
+    }
+
+    private void collapseStartActivity(Intent what) {
+        // collapse status bar
+        StatusBarManager statusBarManager = (StatusBarManager) getContext().getSystemService(
+                Context.STATUS_BAR_SERVICE);
+        statusBarManager.collapsePanels();
+
+        // dismiss keyguard in case it was active and no passcode set
+        try {
+            ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+        } catch (Exception ex) {
+            // no action needed here
+        }
+
+        // start activity
+        what.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(what);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        collapseStartActivity(intent);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        Intent intent = new Intent("android.settings.DATE_SETTINGS");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        collapseStartActivity(intent);
+
+        // consume event
+        return true;
     }
 }
 
