@@ -52,6 +52,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -91,6 +92,7 @@ import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.DemoMode;
 import com.android.systemui.EventLogTags;
 import com.android.systemui.R;
+import com.android.systemui.BatteryMeterView;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.GestureRecorder;
@@ -99,8 +101,10 @@ import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.NotificationData.Entry;
 import com.android.systemui.statusbar.SignalClusterView;
 import com.android.systemui.statusbar.StatusBarIconView;
+import com.android.systemui.statusbar.phone.QuickSettings;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.BluetoothController;
+import com.android.systemui.statusbar.policy.CircleBattery;
 import com.android.systemui.statusbar.policy.DateView;
 import com.android.systemui.statusbar.policy.HeadsUpNotificationView;
 import com.android.systemui.statusbar.policy.LocationController;
@@ -216,6 +220,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
     View mFlipSettingsView;
     QuickSettingsContainerView mSettingsContainer;
     int mSettingsPanelGravity;
+    private SettingsObserver mSettingsObserver;
 
     // top bar
     View mNotificationPanelHeader;
@@ -232,6 +237,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
     private int mNotificationHeaderHeight;
 
     private boolean mShowCarrierInPanel = false;
+
+    private BatteryMeterView mBatteryView;
+    private CircleBattery mCircleBatteryView;
 
     // position
     int[] mPositionTmp = new int[2];
@@ -288,6 +296,34 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
             }
         }
     };
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY_COLOR), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY_TEXT_COLOR), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY_TEXT_CHARGING_COLOR), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_CIRCLE_BATTERY_ANIMATIONSPEED), false, this);
+                 updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+                 updateSettings();
+        }
+    }
 
     // ensure quick settings is disabled until the current user makes it through the setup wizard
     private boolean mUserSetup = false;
@@ -359,6 +395,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         super.start(); // calls createAndAddWindows()
 
         addNavigationBar();
+
+       SettingsObserver observer = new SettingsObserver(mHandler);
+       observer.observe();
 
         // Lastly, call to the icon policy to install/update all the icons.
         mIconPolicy = new PhoneStatusBarPolicy(mContext);
@@ -614,6 +653,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
             mNetworkController = new NetworkController(mContext);
             final SignalClusterView signalCluster =
                 (SignalClusterView)mStatusBarView.findViewById(R.id.signal_cluster);
+
+            mBatteryView = (BatteryMeterView) mStatusBarView.findViewById(R.id.battery);
+            mCircleBatteryView = (CircleBattery) mStatusBarView.findViewById(R.id.circle_battery);
+            mBatteryController.addStateChangedCallback(mCircleBatteryView);
 
             mNetworkController.addSignalCluster(signalCluster);
             signalCluster.setNetworkController(mNetworkController);
@@ -2629,6 +2672,30 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         animateCollapsePanels();
         updateNotificationIcons();
         resetUserSetupObserver();
+        updateSettings();
+    }
+
+    private void updateSettings() {
+        ContentResolver resolver = mContext.getContentResolver();
+
+        if (mBatteryView != null && mCircleBatteryView != null) {
+          int batteryStyle = Settings.System.getInt(resolver,
+                  Settings.System.STATUS_BAR_BATTERY, BatteryMeterView.BATTERY_STYLE_NORMAL);
+          boolean meterVisible = batteryStyle == BatteryMeterView.BATTERY_STYLE_NORMAL || batteryStyle == BatteryMeterView.BATTERY_STYLE_ICON_PERCENT;
+          boolean circleVisible = batteryStyle == BatteryMeterView.BATTERY_STYLE_CIRCLE
+                  || batteryStyle == BatteryMeterView.BATTERY_STYLE_CIRCLE_PERCENT
+                  || batteryStyle == BatteryMeterView.BATTERY_STYLE_DOTTED_CIRCLE
+                  || batteryStyle == BatteryMeterView.BATTERY_STYLE_DOTTED_CIRCLE_PERCENT;
+
+          mBatteryView.setVisibility(meterVisible ? View.VISIBLE : View.GONE);
+          mCircleBatteryView.setVisibility(circleVisible ? View.VISIBLE : View.GONE);
+          mCircleBatteryView.setShowPercent(batteryStyle == BatteryMeterView.BATTERY_STYLE_CIRCLE_PERCENT
+                                         || batteryStyle == BatteryMeterView.BATTERY_STYLE_DOTTED_CIRCLE_PERCENT);
+
+           mCircleBatteryView.updateSettings();
+           mBatteryView.updateSettings();
+           mQS.updateBattery();
+         }
     }
 
     private void resetUserSetupObserver() {
