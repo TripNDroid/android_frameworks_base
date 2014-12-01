@@ -8913,6 +8913,14 @@ public final class Settings {
         public static final String INTENT_FIREWALL_UPDATE_METADATA_URL =
                 "intent_firewall_metadata_url";
 
+
+       /**
+         * Whether to wake the display when plugging or unplugging the charger
+         *
+         * @hide
+         */
+        public static final String WAKE_WHEN_PLUGGED_OR_UNPLUGGED = "wake_when_plugged_or_unplugged";
+
         /**
          * SELinux enforcement status. If 0, permissive; if 1, enforcing.
          * @hide
@@ -9220,6 +9228,7 @@ public final class Settings {
         public static final String[] SETTINGS_TO_BACKUP = {
             BUGREPORT_IN_POWER_MENU,
             STAY_ON_WHILE_PLUGGED_IN,
+            WAKE_WHEN_PLUGGED_OR_UNPLUGGED,
             AUTO_TIME,
             AUTO_TIME_ZONE,
             POWER_SOUNDS_ENABLED,
