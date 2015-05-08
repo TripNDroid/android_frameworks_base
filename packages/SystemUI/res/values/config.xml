@@ -105,7 +105,7 @@
 
     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
     <string name="quick_settings_tiles_stock" translatable="false">
-        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,location,hotspot,inversion,saver,work,cast,night
+        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,location,hotspot,inversion,saver,work,cast,night,pie
     </string>
 
     <!-- The tiles to display in QuickSettings -->
@@ -287,5 +287,16 @@
     <!-- Temp at which to show a warning notification if config_showTemperatureWarning is true.
          If < 0, uses the value from HardwarePropertiesManager#getDeviceTemperatures. -->
     <integer name="config_warningTemperature">-1</integer>
+
+    <!-- Enable Pie relocation to either stick to a physical side or default to the right side -->
+    <bool name="config_relocatePieOnRotation">true</bool>
+
+    <!-- Enable force Pie centered -->
+    <bool name="config_forcePieCentered">true</bool>
+
+    <!-- Sensivity of pie gestures controlls.
+        Must be minimum 1 and maximum 10 (See @EdgeServiceConstants.java).
+        Default for pie is high sensivity -->
+    <integer name="pie_gesture_sensivity">10</integer>
 
 </resources>
