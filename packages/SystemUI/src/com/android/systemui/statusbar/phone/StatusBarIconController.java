@@ -401,6 +401,9 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
                     .setStartDelay(mPhoneStatusBar.getKeyguardFadingAwayDelay())
                     .start();
         }
+        if (clockLocation == 2 && mCclock != null) {
+            mCclock.setVisibility(visible ? (showClock ? View.VISIBLE : View.GONE) : View.GONE);
+        }
     }
 
     /**
