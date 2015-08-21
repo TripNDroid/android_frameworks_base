@@ -2968,6 +2968,7 @@
 
     <!-- Default value for proximity check on screen wake -->
     <bool name="config_proximityCheckOnWake">false</bool>
+    <bool name="config_proximityCheckOnWakeEnabledByDefault">false</bool>
     <integer name="config_proximityCheckTimeout">250</integer>
 
     <!-- Button brightness -->
