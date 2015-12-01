@@ -3672,6 +3672,13 @@ public final class Settings {
         public static final Validator SHOW_TOUCHES_VALIDATOR = sBooleanValidator;
 
         /**
+         * Volume rocker wake
+         * @hide
+         */
+        public static final String VOLUME_ROCKER_WAKE = "volume_rocker_wake";
+
+
+        /**
          * Log raw orientation data from
          * {@link com.android.server.policy.WindowOrientationListener} for use with the
          * orientationplot.py tool.
