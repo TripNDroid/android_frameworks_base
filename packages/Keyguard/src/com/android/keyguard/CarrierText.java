@@ -34,6 +34,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.os.SystemProperties;
 
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.telephony.IccCardConstants.State;
@@ -105,10 +106,29 @@ public class CarrierText extends TextView {
         boolean allSimsMissing = true;
         boolean anySimReadyAndInService = false;
         CharSequence displayText = null;
-
+        String carrier = "405854";
         List<SubscriptionInfo> subs = mKeyguardUpdateMonitor.getSubscriptionInfo(false);
         final int N = subs.size();
         if (DEBUG) Log.d(TAG, "updateCarrierText(): " + N);
+        // If the Subscription Infos are not available and if any of the sims are not
+        // in SIM_STATE_ABSENT,set displayText as "NO SERVICE".
+        // displayText will be overrided after the Subscription infos are available and
+        // displayText is set according to the SIM Status.
+        String property = SystemProperties.get("persist.radio.atel.carrier");
+            if (N == 0 && carrier.equals(property)) {
+                 boolean isSimAbsent = false;
+                 for (int i = 0; i < TelephonyManager.getDefault().getSimCount(); i++) {
+                      if (TelephonyManager.getDefault().getSimState(i)
+                            == TelephonyManager.SIM_STATE_ABSENT) {
+                            isSimAbsent = true;
+                            break;
+                      }
+            }
+            if (!isSimAbsent) {
+                allSimsMissing = false;
+                displayText = getContext().getString(R.string.keyguard_carrier_default);
+            }
+        }
         for (int i = 0; i < N; i++) {
             int subId = subs.get(i).getSubscriptionId();
             State simState = mKeyguardUpdateMonitor.getSimState(subId);
