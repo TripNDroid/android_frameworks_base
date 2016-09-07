@@ -106,7 +106,7 @@ public class CarrierText extends TextView {
         boolean allSimsMissing = true;
         boolean anySimReadyAndInService = false;
         CharSequence displayText = null;
-        String carrier = "405854";
+
         List<SubscriptionInfo> subs = mKeyguardUpdateMonitor.getSubscriptionInfo(false);
         final int N = subs.size();
         if (DEBUG) Log.d(TAG, "updateCarrierText(): " + N);
@@ -114,8 +114,7 @@ public class CarrierText extends TextView {
         // in SIM_STATE_ABSENT,set displayText as "NO SERVICE".
         // displayText will be overrided after the Subscription infos are available and
         // displayText is set according to the SIM Status.
-        String property = SystemProperties.get("persist.radio.atel.carrier");
-            if (N == 0 && carrier.equals(property)) {
+        if (N == 0) {
                  boolean isSimAbsent = false;
                  for (int i = 0; i < TelephonyManager.getDefault().getSimCount(); i++) {
                       if (TelephonyManager.getDefault().getSimState(i)
