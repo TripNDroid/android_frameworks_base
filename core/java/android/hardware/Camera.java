@@ -3754,7 +3754,12 @@ public class Camera {
          *         valid value.
          */
         public float getHorizontalViewAngle() {
-            return Float.parseFloat(get(KEY_HORIZONTAL_VIEW_ANGLE));
+            try {
+                return Float.parseFloat(get(KEY_HORIZONTAL_VIEW_ANGLE));
+            } catch (NumberFormatException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+            return 0;
         }
 
         /**
@@ -3764,7 +3769,12 @@ public class Camera {
          *         valid value.
          */
         public float getVerticalViewAngle() {
-            return Float.parseFloat(get(KEY_VERTICAL_VIEW_ANGLE));
+            try {
+                return Float.parseFloat(get(KEY_VERTICAL_VIEW_ANGLE));
+            } catch (NumberFormatException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+            return 0;
         }
 
         /**
