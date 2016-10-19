@@ -78,6 +78,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private BatteryMeterView mBatteryMeterView;
     private BatteryMeterView mBatteryMeterViewKeyguard;
     private TextView mClock;
+    private TextView mCarrierLabel;
 
     private int mIconSize;
     private int mIconHPadding;
@@ -134,6 +135,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mBatteryMeterView = (BatteryMeterView) statusBar.findViewById(R.id.battery);
         mBatteryMeterViewKeyguard = (BatteryMeterView) keyguardStatusBar.findViewById(R.id.battery);
         scaleBatteryMeterViews(context);
+
+        mCarrierLabel = (TextView) statusBar.findViewById(R.id.statusbar_carrier_text);
 
         mClock = (TextView) statusBar.findViewById(R.id.clock);
         mDarkModeIconColorSingleTone = context.getColor(R.color.dark_mode_icon_color_single_tone);
@@ -530,6 +533,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mBatteryMeterView.setDarkIntensity(
                 isInArea(mTintArea, mBatteryMeterView) ? mDarkIntensity : 0);
         mClock.setTextColor(getTint(mTintArea, mClock, mIconTint));
+        mCarrierLabel.setTextColor(getTint(mTintArea, mCarrierLabel, mIconTint));
     }
 
     public void appTransitionPending() {
@@ -582,6 +586,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         loadDimens();
         mNotificationIconAreaController.onDensityOrFontScaleChanged(mContext);
         updateClock();
+        updateCarrier();
         for (int i = 0; i < mStatusIcons.getChildCount(); i++) {
             View child = mStatusIcons.getChildAt(i);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -596,6 +601,10 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
             child.setLayoutParams(lp);
         }
         scaleBatteryMeterViews(mContext);
+    }
+
+    private void updateCarrier() {
+        FontSizeUtils.updateFontSize(mCarrierLabel, R.dimen.status_bar_carrier_height);
     }
 
     private void updateClock() {
