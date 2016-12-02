@@ -65,6 +65,10 @@ public class BatteryMeterView extends ImageView implements
                 com.android.internal.R.string.status_bar_battery);
         setImageDrawable(mDrawable);
 
+        // The BatteryMeterDrawable wants to use the clear xfermode,
+        // so use a separate layer to not make it clear the background with it.
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
         mContext = context;
         mFrameColor = frameColor;
     }
@@ -76,10 +80,7 @@ public class BatteryMeterView extends ImageView implements
 
     @Override
     public void onTuningChanged(String key, String newValue) {
-        if (StatusBarIconController.ICON_BLACKLIST.equals(key)) {
-            ArraySet<String> icons = StatusBarIconController.getIconBlacklist(newValue);
-            setVisibility(icons.contains(mSlotBattery) ? View.GONE : View.VISIBLE);
-        } else if (STATUS_BAR_BATTERY_STYLE.equals(key)) {
+        if (STATUS_BAR_BATTERY_STYLE.equals(key)) {
             updateBatteryStyle(newValue);
         } else if (STATUS_BAR_CHARGE_COLOR.equals(key)) {
             updateBoltColor();
