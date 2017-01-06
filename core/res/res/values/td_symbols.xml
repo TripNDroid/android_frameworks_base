@@ -71,4 +71,9 @@
     <java-symbol type="array" name="app_ops_labels" />
     <java-symbol type="string" name="status_bar_su" />
 
+  <!-- EdgeGesture service -->
+  <java-symbol type="dimen" name="edge_gesture_trigger_distance" />
+  <java-symbol type="dimen" name="edge_gesture_perpendicular_distance" />
+  <java-symbol type="dimen" name="edge_gesture_trigger_thickness" />
+
 </resources>
