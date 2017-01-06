@@ -108,6 +108,7 @@ import android.service.dreams.DreamService;
 import android.service.dreams.IDreamManager;
 import android.speech.RecognizerIntent;
 import android.telecom.TelecomManager;
+import android.service.gesture.EdgeGestureManager;
 import android.util.DisplayMetrics;
 import android.util.EventLog;
 import android.util.Log;
@@ -150,7 +151,10 @@ import com.android.internal.policy.IShortcutService;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.ScreenShapeHelper;
 import com.android.internal.util.td.ActionHandler;
+import com.android.internal.util.td.TDActionUtils;
 import com.android.internal.util.td.TDSystemReceiver;
+import com.android.internal.util.gesture.EdgeGesturePosition;
+import com.android.internal.util.gesture.EdgeServiceConstants;
 import com.android.internal.widget.PointerLocationView;
 import com.android.server.GestureLauncherService;
 import com.android.server.LocalServices;
@@ -393,6 +397,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     // Whether to allow dock apps with METADATA_DOCK_HOME to temporarily take over the Home key.
     // This is for car dock and this is updated from resource.
     private boolean mEnableCarDockHomeCapture = true;
+
+    boolean mNavigationBarLeftInLandscape = false;
 
     boolean mBootMessageNeedsHiding;
     KeyguardServiceDelegate mKeyguardDelegate;
@@ -939,6 +945,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.PA_PIE_STATE), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.USE_EDGE_SERVICE_FOR_GESTURES), false, this,
+                    UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -1000,6 +1009,67 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private ImmersiveModeConfirmation mImmersiveModeConfirmation;
 
     private SystemGesturesPointerEventListener mSystemGestures;
+
+    private EdgeGestureManager.EdgeGestureActivationListener mEdgeGestureActivationListener
+            = new EdgeGestureManager.EdgeGestureActivationListener() {
+
+        @Override
+        public void onEdgeGestureActivation(int touchX, int touchY,
+                EdgeGesturePosition position, int flags) {
+            WindowState target = null;
+
+            if (position == EdgeGesturePosition.TOP) {
+                target = mStatusBar;
+            } else if (position == EdgeGesturePosition.BOTTOM  && (NAV_BAR_BOTTOM == 0)) {
+                target = mNavigationBar;
+            } else if (position == EdgeGesturePosition.LEFT
+                    && (NAV_BAR_BOTTOM != 0) && mNavigationBarLeftInLandscape) {
+                target = mNavigationBar;
+            } else if (position == EdgeGesturePosition.RIGHT && ((NAV_BAR_BOTTOM != 0) && !mNavigationBarLeftInLandscape)) {
+                target = mNavigationBar;
+            }
+
+            if (target != null) {
+                requestTransientBars(target);
+                dropEventsUntilLift();
+                mEdgeListenerActivated = true;
+            } else {
+                restoreListenerState();
+            }
+        }
+    };
+    private EdgeGestureManager mEdgeGestureManager = null;
+    private int mLastEdgePositions = 0;
+    private boolean mEdgeListenerActivated = false;
+    private boolean mUsingEdgeGestureServiceForGestures = false;
+
+    private void updateEdgeGestureListenerState() {
+        int flags = 0;
+        if (mUsingEdgeGestureServiceForGestures) {
+            flags = EdgeServiceConstants.LONG_LIVING | EdgeServiceConstants.UNRESTRICTED;
+            if (mStatusBar != null && !mStatusBar.isVisibleLw()) {
+                flags |= EdgeGesturePosition.TOP.FLAG;
+            }
+            if (mNavigationBar != null && !mNavigationBar.isVisibleLw()) {
+                if (NAV_BAR_BOTTOM == 0) {
+                    flags |= EdgeGesturePosition.BOTTOM.FLAG;
+                } else if (mNavigationBarLeftInLandscape) {
+                    flags |= EdgeGesturePosition.LEFT.FLAG;
+                } else {
+                    flags |= EdgeGesturePosition.RIGHT.FLAG;
+                }
+            }
+        }
+        if (mEdgeListenerActivated) {
+            mEdgeGestureActivationListener.restoreListenerState();
+            mEdgeListenerActivated = false;
+        }
+        if (flags != mLastEdgePositions) {
+            mEdgeGestureManager.updateEdgeGestureActivationListener(mEdgeGestureActivationListener,
+                    flags);
+            mLastEdgePositions = flags;
+        }
+    }
 
     IStatusBarService getStatusBarService() {
         synchronized (mServiceAquireLock) {
@@ -2185,6 +2255,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             if (mWakeGestureEnabledSetting != wakeGestureEnabledSetting) {
                 mWakeGestureEnabledSetting = wakeGestureEnabledSetting;
                 updateWakeGestureListenerLp();
+            }
+
+            final boolean useEdgeService = Settings.System.getIntForUser(resolver,
+                    Settings.System.USE_EDGE_SERVICE_FOR_GESTURES, 1, UserHandle.USER_CURRENT) == 1;
+            if (useEdgeService ^ mUsingEdgeGestureServiceForGestures && mSystemReady) {
+                if (!mUsingEdgeGestureServiceForGestures && useEdgeService) {
+                    mUsingEdgeGestureServiceForGestures = true;
+                    mWindowManagerFuncs.unregisterPointerEventListener(mSystemGestures);
+                } else if (mUsingEdgeGestureServiceForGestures && !useEdgeService) {
+                    mUsingEdgeGestureServiceForGestures = false;
+                    mWindowManagerFuncs.registerPointerEventListener(mSystemGestures);
+                }
+                updateEdgeGestureListenerState();
             }
 
             // Configure rotation lock.
@@ -4121,6 +4204,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mStatusBarController.adjustSystemUiVisibilityLw(mLastSystemUiFlags, visibility);
         mNavigationBarController.adjustSystemUiVisibilityLw(mLastSystemUiFlags, visibility);
 
+        updateEdgeGestureListenerState();
+
         // Reset any bits in mForceClearingStatusBarVisibility that
         // are now clear.
         mResettingSystemUiFlags &= visibility;
@@ -4454,6 +4539,34 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     // and not in the process of animating on or off, then
                     // we can tell the app that it is covered by it.
                     mSystemBottom = mTmpNavigationFrame.top;
+                }
+            } else if (mNavigationBarLeftInLandscape) {
+                // Landscape screen; nav bar goes to the left.
+                int right = overscanLeft + getNavigationBarWidth(displayRotation, uiMode);
+                mTmpNavigationFrame.set(0, 0, right, displayHeight);
+                mStableLeft = mStableFullscreenLeft = mTmpNavigationFrame.right;
+                if (transientNavBarShowing) {
+                    mNavigationBarController.setBarShowingLw(true);
+                } else if (navVisible) {
+                    mNavigationBarController.setBarShowingLw(true);
+                    mDockLeft = mTmpNavigationFrame.right;
+                    mRestrictedScreenLeft = mDockLeft;
+                    mRestrictedScreenWidth = mDockRight - mRestrictedScreenLeft;
+                    mRestrictedOverscanScreenLeft = mRestrictedScreenLeft;
+                    mRestrictedOverscanScreenWidth = mDockRight
+                            - mRestrictedOverscanScreenLeft;
+                } else {
+                    // We currently want to hide the navigation UI - unless we expanded the status
+                    // bar.
+                    mNavigationBarController.setBarShowingLw(statusBarExpandedNotKeyguard);
+                }
+                if (navVisible && !navTranslucent && !navAllowedHidden
+                        && !mNavigationBar.isAnimatingLw()
+                        && !mNavigationBarController.wasRecentlyTranslucent()) {
+                    // If the nav bar is currently requested to be visible,
+                    // and not in the process of animating on or off, then
+                    // we can tell the app that it is covered by it.
+                    mSystemLeft = mTmpNavigationFrame.right;
                 }
             } else if (mNavigationBarPosition == NAV_BAR_RIGHT) {
                 // Landscape screen; nav bar goes to the right.
@@ -5600,6 +5713,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         // update since mAllowLockscreenWhenOn might have changed
         updateLockScreenTimeout();
+        updateEdgeGestureListenerState();
         return changes;
     }
 
@@ -7262,6 +7376,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mKeyguardDelegate = new KeyguardServiceDelegate(mContext,
                 this::onKeyguardShowingStateChanged);
         mKeyguardDelegate.onSystemReady();
+
+        mEdgeGestureManager = EdgeGestureManager.getInstance();
+        mEdgeGestureManager.setEdgeGestureActivationListener(mEdgeGestureActivationListener);
 
         readCameraLensCoverState();
         updateUiMode();
