@@ -18,6 +18,7 @@ package com.android.server;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.IBluetooth;
@@ -268,7 +269,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
                     } else if (mEnableExternal) {
                         // enable without persisting the setting
                         Slog.d(TAG, "Calling enable");
-                        sendEnableMsg(mQuietEnableExternal, "airplane mode");
+                        sendEnableMsg(mQuietEnableExternal);
                     }
                 }
             }
@@ -702,42 +703,37 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         synchronized(mReceiver) {
             mQuietEnableExternal = true;
             mEnableExternal = true;
-            sendEnableMsg(true, packageName);
+            sendEnableMsg(true);
         }
         return true;
     }
 
-    public boolean enable(String packageName) throws RemoteException {
-        final int callingUid = Binder.getCallingUid();
-        final boolean callerSystem = UserHandle.getAppId(callingUid) == Process.SYSTEM_UID;
-
-        if (!callerSystem) {
-            if (!checkIfCallerIsForegroundUser()) {
-                Slog.w(TAG, "enable(): not allowed for non-active and non system user");
-                return false;
-            }
-
-            mContext.enforceCallingOrSelfPermission(BLUETOOTH_ADMIN_PERM,
-                    "Need BLUETOOTH ADMIN permission");
-
-            if (!isEnabled() && mPermissionReviewRequired
-                    && startConsentUiIfNeeded(packageName, callingUid,
-                            BluetoothAdapter.ACTION_REQUEST_ENABLE)) {
-                return false;
-            }
+    public boolean enable(String callingPackage) {
+        if ((Binder.getCallingUid() != Process.SYSTEM_UID) &&
+            (!checkIfCallerIsForegroundUser())) {
+            Slog.w(TAG,"enable(): not allowed for non-active and non system user");
+            return false;
         }
 
+        mContext.enforceCallingOrSelfPermission(BLUETOOTH_ADMIN_PERM,
+                                                "Need BLUETOOTH ADMIN permission");
         if (DBG) {
-            Slog.d(TAG,"enable(" + packageName + "):  mBluetooth =" + mBluetooth +
-                    " mBinding = " + mBinding + " mState = " +
-                    BluetoothAdapter.nameForState(mState));
+            Slog.d(TAG,"enable():  mBluetooth =" + mBluetooth +
+                    " mBinding = " + mBinding + " mState = " + mState);
         }
+
+        AppOpsManager appOps = (AppOpsManager) mContext
+                .getSystemService(Context.APP_OPS_SERVICE);
+        int callingUid = Binder.getCallingUid();
+        if (appOps.noteOp(AppOpsManager.OP_BLUETOOTH_CHANGE, callingUid,
+                callingPackage) != AppOpsManager.MODE_ALLOWED)
+            return false;
 
         synchronized(mReceiver) {
             mQuietEnableExternal = false;
             mEnableExternal = true;
             // waive WRITE_SECURE_SETTINGS permission check
-            sendEnableMsg(false, packageName);
+            sendEnableMsg(false);
         }
         if (DBG) Slog.d(TAG, "enable returning");
         return true;
@@ -917,7 +913,7 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
         if (DBG) Slog.d(TAG, "Bluetooth boot completed");
         if (mEnableExternal && isBluetoothPersistedStateOnBluetooth()) {
             if (DBG) Slog.d(TAG, "Auto-enabling Bluetooth.");
-            sendEnableMsg(mQuietEnableExternal, "system boot");
+            sendEnableMsg(mQuietEnableExternal);
         } else if (!isNameAndAddressSet()) {
             if (DBG) Slog.d(TAG, "Getting adapter name and address");
             Message getMsg = mHandler.obtainMessage(MESSAGE_GET_NAME_AND_ADDRESS);
@@ -1887,13 +1883,11 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
 
     private void sendDisableMsg(String packageName) {
         mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_DISABLE));
-        addActiveLog(packageName, false);
     }
 
-    private void sendEnableMsg(boolean quietMode, String packageName) {
+    private void sendEnableMsg(boolean quietMode) {
         mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_ENABLE,
                              quietMode ? 1 : 0, 0));
-        addActiveLog(packageName, true);
     }
 
     private void addActiveLog(String packageName, boolean enable) {
