@@ -17,6 +17,7 @@
 package com.android.internal.policy;
 
 import static android.provider.Settings.Global.DEVELOPMENT_FORCE_RESIZABLE_ACTIVITIES;
+import static android.provider.Settings.Global.DEVELOPMENT_ENABLE_FREEFORM_WINDOWS_SUPPORT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.WindowManager.LayoutParams.*;
@@ -319,6 +320,8 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
         }
         // Even though the device doesn't support picture-in-picture mode,
         // an user can force using it through developer options.
+        boolean freeformWindowManagement = Settings.Global.getInt(context.getContentResolver(),
+                DEVELOPMENT_ENABLE_FREEFORM_WINDOWS_SUPPORT, 0) != 0;
         boolean forceResizable = Settings.Global.getInt(context.getContentResolver(),
                 DEVELOPMENT_FORCE_RESIZABLE_ACTIVITIES, 0) != 0;
         mSupportsPictureInPicture = forceResizable || context.getPackageManager().hasSystemFeature(
