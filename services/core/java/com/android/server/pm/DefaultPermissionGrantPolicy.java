@@ -686,6 +686,16 @@ final class DefaultPermissionGrantPolicy {
                     && doesPackageSupportRuntimePermissions(storageManagerPckg)) {
                 grantRuntimePermissionsLPw(storageManagerPckg, STORAGE_PERMISSIONS, true, userId);
             }
+
+            // Browser
+            PackageParser.Package browserpackage = getSystemPackageLPr(
+                    "com.android.browser");
+            if (browserpackage != null && doesPackageSupportRuntimePermissions(browserpackage)) {
+                grantRuntimePermissionsLPw(browserpackage, CONTACTS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, STORAGE_PERMISSIONS, userId);
+            }
+
             mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
         }
     }
