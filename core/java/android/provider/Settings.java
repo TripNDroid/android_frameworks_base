@@ -5476,6 +5476,13 @@ public final class Settings {
                 LOCK_PATTERN_TACTILE_FEEDBACK_ENABLED = "lock_pattern_tactile_feedback_enabled";
 
         /**
+         * Hide lockscreen bottom shortcuts
+         *
+         * @hide
+         */
+        public static final String HIDE_LOCKSCREEN_BOTTOM_SHORTCUTS = "hide_lockscreen_bottom_shortcuts";
+
+        /**
          * This preference allows the device to be locked given time after screen goes off,
          * subject to current DeviceAdmin policy limits.
          * @hide

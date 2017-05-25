@@ -238,6 +238,8 @@ public class KeyguardStatusView extends GridLayout {
                 Settings.System.HIDE_LOCKSCREEN_CLOCK, 1, UserHandle.USER_CURRENT) == 1;
         boolean showDate = Settings.System.getIntForUser(resolver,
                 Settings.System.HIDE_LOCKSCREEN_DATE, 1, UserHandle.USER_CURRENT) == 1;
+        boolean HideLockscreenBottomShortcuts = Settings.Secure.getIntForUser(resolver,
+                Settings.Secure.HIDE_LOCKSCREEN_BOTTOM_SHORTCUTS, 0, UserHandle.USER_CURRENT) == 1;
 
         mClockView = (TextClock) findViewById(R.id.clock_view);
         mClockView.setVisibility(showClock ? View.VISIBLE : View.GONE);
@@ -264,6 +266,8 @@ public class KeyguardStatusView extends GridLayout {
             final ContentResolver resolver = context.getContentResolver();
             final boolean showAlarm = Settings.System.getIntForUser(resolver,
                     Settings.System.HIDE_LOCKSCREEN_ALARM, 1, UserHandle.USER_CURRENT) == 1;
+            final boolean HideLockscreenBottomShortcuts = Settings.Secure.getIntForUser(resolver,
+                    Settings.Secure.HIDE_LOCKSCREEN_BOTTOM_SHORTCUTS, 0, UserHandle.USER_CURRENT) == 1;
             final String dateViewSkel = res.getString(hasAlarm && showAlarm
                     ? R.string.abbrev_wday_month_day_no_year_alarm
                     : R.string.abbrev_wday_month_day_no_year);
