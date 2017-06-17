@@ -33,6 +33,7 @@ import com.android.systemui.R;
 import com.android.systemui.RecentsComponent;
 import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.tuner.TunerService;
+import com.android.systemui.statusbar.BaseStatusBar;
 
 import static android.view.WindowManager.DOCKED_INVALID;
 import static android.view.WindowManager.DOCKED_LEFT;
@@ -60,6 +61,7 @@ public class NavigationBarGestureHelper extends GestureDetector.SimpleOnGestureL
      */
     public static final int DRAG_MODE_DIVIDER = 1;
 
+    private BaseStatusBar mBar;
     private RecentsComponent mRecentsComponent;
     private Divider mDivider;
     private Context mContext;
@@ -87,6 +89,10 @@ public class NavigationBarGestureHelper extends GestureDetector.SimpleOnGestureL
         mMinFlingVelocity = configuration.getScaledMinimumFlingVelocity();
         mTaskSwitcherDetector = new GestureDetector(context, this);
         TunerService.get(context).addTunable(this, KEY_DOCK_WINDOW_GESTURE);
+    }
+
+    public void setBar(BaseStatusBar phoneStatusBar) {
+        mBar = phoneStatusBar;
     }
 
     public void setComponents(RecentsComponent recentsComponent, Divider divider,

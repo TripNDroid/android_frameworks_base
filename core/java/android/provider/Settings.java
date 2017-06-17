@@ -3198,6 +3198,13 @@ public final class Settings {
                 new DiscreteValueValidator(new String[] {"12", "24"});
 
         /**
+        * Developer options - Navigation Bar show switch
+        * @hide
+        */
+        public static final String NAVIGATION_BAR_VISIBLE = "navigation_bar_visible";
+
+
+        /**
          * Date format string
          *   mm/dd/yyyy
          *   dd/mm/yyyy

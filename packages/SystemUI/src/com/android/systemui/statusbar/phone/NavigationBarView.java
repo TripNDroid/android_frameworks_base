@@ -299,6 +299,10 @@ public class NavigationBarView extends LinearLayout {
         }
     }
 
+    public void setBar(PhoneStatusBar phoneStatusBar) {
+        mGestureHelper.setBar(phoneStatusBar);
+    }
+
     @Override
     public void setLayoutDirection(int layoutDirection) {
         // Reload all the icons
