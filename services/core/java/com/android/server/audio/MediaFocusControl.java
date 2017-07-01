@@ -508,4 +508,14 @@ public class MediaFocusControl {
         }
     }
 
+    protected boolean isAppInFocus(String name) {
+        boolean isInFocus = false;
+        synchronized(mAudioFocusLock) {
+            if (!mFocusStack.empty()) {
+                isInFocus = mFocusStack.peek().hasSamePackage(name);
+            }
+        }
+        return isInFocus;
+    }
+
 }
