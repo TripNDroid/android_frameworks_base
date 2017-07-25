@@ -77,6 +77,7 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.FastXmlSerializer;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.XmlUtils;
+import com.android.server.am.ActivityManagerService;
 import com.android.server.PermissionDialogReqQueue.PermissionDialogReq;
 
 import libcore.util.EmptyArray;
@@ -101,6 +102,7 @@ public class AppOpsService extends IAppOpsService.Stub {
     final boolean mStrictEnable;
     AppOpsPolicy mPolicy;
     private PowerManager mPowerManager;
+    private final ActivityManagerService mActivityManagerService;
 
     boolean mWriteScheduled;
     boolean mFastWriteScheduled;
@@ -275,11 +277,12 @@ public class AppOpsService extends IAppOpsService.Stub {
         }
     }
 
-    public AppOpsService(File storagePath, Handler handler) {
+    public AppOpsService(File storagePath, Handler handler, ActivityManagerService service) {
         mFile = new AtomicFile(storagePath);
         mHandler = handler;
         mLooper = Looper.myLooper();
         mStrictEnable = AppOpsManager.isStrictEnable();
+        mActivityManagerService = service;
         readState();
     }
 
@@ -1141,7 +1144,7 @@ public class AppOpsService extends IAppOpsService.Stub {
                     op.ignoredCount++;
                     return switchOp.mode;
                 } else if (switchOp.mode == AppOpsManager.MODE_ASK) {
-                    if (Looper.myLooper() == mLooper) {
+                    if (Looper.myLooper() == mLooper || Thread.holdsLock(mActivityManagerService)) {
                         Log.e(TAG,
                                 "noteOperation: This method will deadlock if called from the main thread. (Code: "
                                         + code
@@ -1277,7 +1280,7 @@ public class AppOpsService extends IAppOpsService.Stub {
                 broadcastOpIfNeeded(code);
                 return AppOpsManager.MODE_ALLOWED;
             } else {
-                if (Looper.myLooper() == mLooper) {
+                if (Looper.myLooper() == mLooper || Thread.holdsLock(mActivityManagerService)) {
                     Log.e(TAG,
                             "startOperation: This method will deadlock if called from the main thread. (Code: "
                                     + code
