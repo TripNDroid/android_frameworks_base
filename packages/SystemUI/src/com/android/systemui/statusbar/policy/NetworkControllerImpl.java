@@ -22,14 +22,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkScoreManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
@@ -116,6 +119,9 @@ public class NetworkControllerImpl extends BroadcastReceiver
     private final BitSet mConnectedTransports = new BitSet();
     private final BitSet mValidatedTransports = new BitSet();
 
+    // show lte/4g switch
+    private boolean mShowLteFourGee;
+
     // States that don't belong to a subcontroller.
     private boolean mAirplaneMode = false;
     private boolean mHasNoSims;
@@ -199,6 +205,10 @@ public class NetworkControllerImpl extends BroadcastReceiver
         mAccessPoints = accessPointController;
         mDataUsageController = dataUsageController;
         mDataUsageController.setNetworkController(this);
+
+        mSettingsObserver.observe();
+        mSettingsObserver.update();
+
         // TODO: Find a way to move this into DataUsageController.
         mDataUsageController.setCallback(new DataUsageController.Callback() {
             @Override
@@ -478,6 +488,44 @@ public class NetworkControllerImpl extends BroadcastReceiver
             controller.setConfiguration(mConfig);
         }
         refreshLocale();
+    }
+
+    private SettingsObserver mSettingsObserver = new SettingsObserver(new Handler());
+    private class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SHOW_LTE_FOURGEE),
+                    false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            if (uri.equals(Settings.System.getUriFor(
+                  Settings.System.SHOW_LTE_FOURGEE))) {
+                  mShowLteFourGee = Settings.System.getIntForUser(
+                  mContext.getContentResolver(),
+                  Settings.System.SHOW_LTE_FOURGEE,
+                  0, UserHandle.USER_CURRENT) == 1;
+                  for (int i = 0; i < mMobileSignalControllers.size(); i++) {
+                      MobileSignalController controller = mMobileSignalControllers.valueAt(i);
+                      controller.setConfiguration(mConfig);
+                  }
+             }
+        }
+        public void update() {
+            updateFourGeeSetting();
+        }
+    }
+
+    private void updateFourGeeSetting() {
+            boolean mShowLteFourGee = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.SHOW_LTE_FOURGEE, 0, UserHandle.USER_CURRENT) == 1;
     }
 
     private void updateMobileControllers() {
@@ -966,7 +1014,6 @@ public class NetworkControllerImpl extends BroadcastReceiver
     static class Config {
         boolean showAtLeast3G = false;
         boolean alwaysShowCdmaRssi = false;
-        boolean show4gForLte = false;
         boolean hideLtePlus = false;
         boolean hspaDataDistinguishable;
 
@@ -977,7 +1024,6 @@ public class NetworkControllerImpl extends BroadcastReceiver
             config.showAtLeast3G = res.getBoolean(R.bool.config_showMin3G);
             config.alwaysShowCdmaRssi =
                     res.getBoolean(com.android.internal.R.bool.config_alwaysUseCdmaRssi);
-            config.show4gForLte = res.getBoolean(R.bool.config_show4GForLTE);
             config.hspaDataDistinguishable =
                     res.getBoolean(R.bool.config_hspa_data_distinguishable);
             config.hideLtePlus = res.getBoolean(R.bool.config_hideLtePlus);
