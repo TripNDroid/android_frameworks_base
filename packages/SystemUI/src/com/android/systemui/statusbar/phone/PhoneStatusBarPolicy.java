@@ -81,6 +81,7 @@ import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.RotationLockController;
 import com.android.systemui.statusbar.policy.RotationLockController.RotationLockControllerCallback;
 import com.android.systemui.statusbar.policy.UserInfoController;
+import com.android.systemui.statusbar.policy.SuController;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.util.NotificationChannels;
 
@@ -111,6 +112,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
     private final String mSlotRotate;
     private final String mSlotHeadset;
     private final String mSlotDataSaver;
+    private final String mSlotSu;
     private final String mSlotLocation;
 
     private final Context mContext;
@@ -124,6 +126,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
     private final StatusBarIconController mIconController;
     private final RotationLockController mRotationLockController;
     private final DataSaverController mDataSaver;
+    private final SuController mSuController;
     private final ZenModeController mZenController;
     private final DeviceProvisionedController mProvisionedController;
     private final KeyguardMonitor mKeyguardMonitor;
@@ -157,6 +160,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
         mUserManager = (UserManager) mContext.getSystemService(Context.USER_SERVICE);
         mRotationLockController = Dependency.get(RotationLockController.class);
         mDataSaver = Dependency.get(DataSaverController.class);
+        mSuController = Dependency.get(SuController.class);
         mZenController = Dependency.get(ZenModeController.class);
         mProvisionedController = Dependency.get(DeviceProvisionedController.class);
         mKeyguardMonitor = Dependency.get(KeyguardMonitor.class);
@@ -174,6 +178,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
         mSlotRotate = context.getString(com.android.internal.R.string.status_bar_rotate);
         mSlotHeadset = context.getString(com.android.internal.R.string.status_bar_headset);
         mSlotDataSaver = context.getString(com.android.internal.R.string.status_bar_data_saver);
+        mSlotSu = context.getString(com.android.internal.R.string.status_bar_su);
         mSlotLocation = context.getString(com.android.internal.R.string.status_bar_location);
 
         // listen for broadcasts
@@ -223,6 +228,11 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
         mIconController.setIcon(mSlotHotspot, R.drawable.stat_sys_hotspot,
                 mContext.getString(R.string.accessibility_status_bar_hotspot));
         mIconController.setIconVisibility(mSlotHotspot, mHotspot.isHotspotEnabled());
+
+        // su
+        mIconController.setIcon(mSlotSu, R.drawable.stat_sys_su, null);
+        mIconController.setIconVisibility(mSlotSu, false);
+        mSuController.addCallback(mSuCallback);
 
         // managed profile
         mIconController.setIcon(mSlotManagedProfile, R.drawable.stat_sys_managed_profile_status,
@@ -656,6 +666,10 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
         }
     };
 
+    private void updateSu() {
+        mIconController.setIconVisibility(mSlotSu, mSuController.hasActiveSessions());
+    }
+
     private final CastController.Callback mCastCallback = new CastController.Callback() {
         @Override
         public void onCastDevicesChanged() {
@@ -773,4 +787,12 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
             mIconController.setIconVisibility(mSlotCast, false);
         }
     };
+
+    private final SuController.Callback mSuCallback = new SuController.Callback() {
+        @Override
+        public void onSuSessionsChanged() {
+            updateSu();
+        }
+    };
+
 }

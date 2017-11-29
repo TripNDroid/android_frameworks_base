@@ -1752,6 +1752,7 @@ final class ActivityRecord extends ConfigurationContainer implements AppWindowCo
             stack.setVisibleBehindActivity(null /* ActivityRecord */);
         }
         mStackSupervisor.checkReadyForSleepLocked();
+        stack.updatePrivacyGuardNotificationLocked(this);
     }
 
     final void activityStoppedLocked(Bundle newIcicle, PersistableBundle newPersistentState,
