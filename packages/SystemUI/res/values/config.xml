@@ -336,4 +336,6 @@
     <!-- Whether to show activity indicators in the status bar -->
     <bool name="config_showActivity">false</bool>
 
+    <!-- Connect / unconnect charger sound -->
+    <string name="config_batteryPlugSound">/system/media/audio/ui/BatteryPlugged.ogg</string>
 </resources>
