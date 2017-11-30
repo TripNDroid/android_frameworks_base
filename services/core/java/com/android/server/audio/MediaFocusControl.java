@@ -815,6 +815,16 @@ public class MediaFocusControl implements PlayerFocusEnforcer {
         }
     }
 
+    protected boolean isAppInFocus(String name) {
+        boolean isInFocus = false;
+        synchronized(mAudioFocusLock) {
+            if (!mFocusStack.empty()) {
+                isInFocus = mFocusStack.peek().hasSamePackage(name);
+            }
+        }
+        return isInFocus;
+    }
+
     private void runAudioCheckerForRingOrCallAsync(final boolean enteringRingOrCall) {
         new Thread() {
             public void run() {

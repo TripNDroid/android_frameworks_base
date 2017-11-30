@@ -5782,6 +5782,10 @@ public class AudioService extends IAudioService.Stub
                         com.android.internal.R.bool.config_camera_sound_forced);
     }
 
+    public boolean isAppInFocus(String name) {
+        return mMediaFocusControl.isAppInFocus(name);
+    }
+
     //==========================================================================================
     // Device orientation
     //==========================================================================================
