@@ -2762,6 +2762,23 @@ public class AudioManager {
     }
 
     /**
+     *  @hide
+     *  Check if the specified App obtains the focus.
+     *  @param packageName the package name of the App.
+     *  @return ture if the App obtains the focus.
+     */
+    public boolean isAppInFocus(String packageName) {
+        boolean isFocus = false;
+        IAudioService service = getService();
+        try {
+            isFocus = service.isAppInFocus(packageName);
+        } catch (RemoteException e) {
+            Log.e(TAG, "Can't call isAppInFocus() on AudioService due to "+e);
+        }
+        return isFocus;
+    }
+
+    /**
      * Registers the remote control client for providing information to display on the remote
      * controls.
      * @param rcClient The remote control client from which remote controls will receive
