@@ -191,4 +191,6 @@
     <!-- Default for Settings.Global.TETHER_DUN_REQUIRED -->
     <integer name="def_tether_dun_required">0</integer>
 
+    <!-- Defaults for Settings.System.NAVIGATION_BAR_VISIBLE. -->
+    <integer name="navigation_bar_visible">0</integer>
 </resources>
