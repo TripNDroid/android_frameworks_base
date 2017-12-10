@@ -3979,5 +3979,9 @@ message MetricsEvent {
 
     // Show LTE/4G Settings
     ACTION_LTE_FOURGEE = 999;
+
+    // TripNDroid Settings
+    TD_SETTINGS = 1000;
+
   }
 }
