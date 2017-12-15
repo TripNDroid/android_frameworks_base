@@ -19,9 +19,11 @@ package com.android.keyguard;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
@@ -167,6 +169,7 @@ public class KeyguardStatusView extends GridLayout {
 
         refreshTime();
         refreshAlarmStatus(nextAlarm);
+        updateSettings(false);
     }
 
     void refreshAlarmStatus(AlarmManager.AlarmClockInfo nextAlarm) {
@@ -212,6 +215,7 @@ public class KeyguardStatusView extends GridLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         KeyguardUpdateMonitor.getInstance(mContext).registerCallback(mInfoCallback);
+        updateSettings(false);
     }
 
     @Override
@@ -242,6 +246,14 @@ public class KeyguardStatusView extends GridLayout {
         return false;
     }
 
+    private void updateSettings(boolean forceHide) {
+        final ContentResolver resolver = getContext().getContentResolver();
+        final Resources res = getContext().getResources();
+
+        boolean HideLockscreenBottomShortcuts = Settings.Secure.getIntForUser(resolver,
+                Settings.Secure.HIDE_LOCKSCREEN_BOTTOM_SHORTCUTS, 0, UserHandle.USER_CURRENT) == 1;
+    }
+
     // DateFormat.getBestDateTimePattern is extremely expensive, and refresh is called often.
     // This is an optimization to ensure we only recompute the patterns when the inputs change.
     private static final class Patterns {
@@ -253,6 +265,9 @@ public class KeyguardStatusView extends GridLayout {
         static void update(Context context, boolean hasAlarm) {
             final Locale locale = Locale.getDefault();
             final Resources res = context.getResources();
+            final ContentResolver resolver = context.getContentResolver();
+            final boolean HideLockscreenBottomShortcuts = Settings.Secure.getIntForUser(resolver,
+                    Settings.Secure.HIDE_LOCKSCREEN_BOTTOM_SHORTCUTS, 0, UserHandle.USER_CURRENT) == 1;
             dateViewSkel = res.getString(hasAlarm
                     ? R.string.abbrev_wday_month_day_no_year_alarm
                     : R.string.abbrev_wday_month_day_no_year);
