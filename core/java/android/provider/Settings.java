@@ -4006,6 +4006,12 @@ public final class Settings {
         public static final String DIALER_OPENCNAM_AUTH_TOKEN = "dialer_opencnam_auth_token";
 
         /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_VISIBLE = "navigation_bar_visible";
+
+
+        /**
          * @deprecated Use {@link android.provider.Settings.Global#DESK_DOCK_SOUND}
          * instead
          * @hide
@@ -4417,6 +4423,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(LOCK_TO_APP_ENABLED);
             PRIVATE_SETTINGS.add(EGG_MODE);
             PRIVATE_SETTINGS.add(SHOW_BATTERY_PERCENT);
+            PRIVATE_SETTINGS.add(NAVIGATION_BAR_VISIBLE);
             PRIVATE_SETTINGS.add(WAKE_WHEN_PLUGGED_OR_UNPLUGGED);
             PRIVATE_SETTINGS.add(NOTIFICATION_LIGHT_SCREEN_ON);
             PRIVATE_SETTINGS.add(NOTIFICATION_LIGHT_PULSE_DEFAULT_COLOR);

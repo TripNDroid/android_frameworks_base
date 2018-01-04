@@ -891,6 +891,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         createAndAddWindows();
 
         mSettingsObserver.onChange(false); // set up
+        mCustomSettingsObserver.observe();
         mCommandQueue.disable(switches[0], switches[6], false /* animate */);
         setSystemUiVisibility(switches[1], switches[7], switches[8], 0xffffffff,
                 fullscreenStackBounds, dockedStackBounds);
@@ -902,6 +903,15 @@ public class StatusBar extends SystemUI implements DemoMode,
         int N = iconSlots.size();
         for (int i=0; i < N; i++) {
             mCommandQueue.setIcon(iconSlots.get(i), icons.get(i));
+        }
+
+        try {
+            boolean needsNav = mWindowManagerService.needsNavigationBar();
+            if (needsNav) {
+                updateNavigationBar(true);
+            }
+        } catch (RemoteException ex) {
+            // no window manager? good luck with that
         }
 
         // Set up the initial notification state.
@@ -5846,6 +5856,30 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     };
 
+    private CustomSettingsObserver mCustomSettingsObserver = new CustomSettingsObserver(mHandler);
+    private class CustomSettingsObserver extends ContentObserver {
+        CustomSettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_VISIBLE),
+                    false, this, UserHandle.USER_ALL);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_VISIBLE))) {
+            boolean visible = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.NAVIGATION_BAR_VISIBLE, 0, UserHandle.USER_CURRENT) == 1;
+                    updateNavigationBar(visible);
+            }
+        }
+    }
+
     private RemoteViews.OnClickHandler mOnClickHandler = new RemoteViews.OnClickHandler() {
 
         @Override
@@ -7583,6 +7617,19 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
     // End Extra BaseStatusBarMethods.
+
+    private void updateNavigationBar(boolean show) {
+        if (show) {
+            if (mNavigationBarView == null) {
+                createNavigationBar();
+            }
+        } else {
+            if (mNavigationBarView != null){
+                mWindowManager.removeViewImmediate(mNavigationBarView);
+                mNavigationBarView = null;
+            }
+        }
+    }
 
     private final Runnable mAutoDim = () -> {
         if (mNavigationBar != null) {
