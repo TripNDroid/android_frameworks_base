@@ -394,6 +394,11 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
     PowerManager.WakeLock mGoingToSleep;
 
     /**
+     * Is the privacy guard currently enabled? Shared between ActivityStacks
+     */
+    String mPrivacyGuardPackageName = null;
+
+    /**
      * A list of tokens that cause the top activity to be put to sleep.
      * They are used by components that may hide and block interaction with underlying
      * activities.
@@ -3279,8 +3284,9 @@ public class ActivityStackSupervisor extends ConfigurationContainer implements D
         removeSleepTimeouts();
 
         if (mGoingToSleep.isHeld()) {
-            mGoingToSleep.release();
-        }
+             mGoingToSleep.release();
+         }
+
         if (mService.mShuttingDown) {
             mService.notifyAll();
         }
