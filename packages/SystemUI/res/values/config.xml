@@ -432,4 +432,7 @@
         <item>60</item>
         <item>120</item>
     </integer-array>
+
+    <!-- Connect / unconnect charger sound -->
+    <string name="config_batteryPlugSound">/system/media/audio/ui/BatteryPlugged.ogg</string>
 </resources>
