@@ -25,5 +25,6 @@ LOCAL_MODULE        := media_codecs_dolby.xml
 LOCAL_MODULE_TAGS   := optional
 LOCAL_MODULE_CLASS  := ETC
 LOCAL_SRC_FILES     := configs/media_codecs_dolby.xml
+LOCAL_MODULE_PATH   := $(TARGET_OUT_VENDOR)/etc
 include $(BUILD_PREBUILT)
 
