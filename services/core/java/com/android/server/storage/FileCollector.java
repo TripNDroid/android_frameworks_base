@@ -88,6 +88,7 @@ public class FileCollector {
         EXTENSION_MAP.put("dif", VIDEO);
         EXTENSION_MAP.put("dv", VIDEO);
         EXTENSION_MAP.put("fli", VIDEO);
+        EXTENSION_MAP.put("flv", VIDEO);
         EXTENSION_MAP.put("m4v", VIDEO);
         EXTENSION_MAP.put("ts", VIDEO);
         EXTENSION_MAP.put("mpeg", VIDEO);
